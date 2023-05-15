@@ -232,7 +232,7 @@ class HM extends CI_Controller
                 $data_link .= 'Presensi Kegiatan ' . $row['nama_kegiatan'] . ' : ' . base_url() . 'Presensi/online/' . $row['token_presensi'] . ' ';
             }
 
-            // $this->_setEmail($token, $email, $data_link);
+            $this->_setEmail($token, $email, $data_link);
 
             // $this->_sendEmail($token, $email, $data_link);
 
@@ -264,52 +264,14 @@ class HM extends CI_Controller
         $this->email->from($email_saya, 'HIMA UNMA');
         $this->email->to($email_penerima);
         $this->email->subject('INFO PESERTA');
-        $this->email->message('
-        Berikut adalah link untuk : 
-        Informasi Anda : ' . base_url() . 'HM/info/' . urlencode($token) . '
-        
-        ' . $data_link . '
-        
-        ');
+        $this->email->message(' Berikut adalah link untuk : 
+        Informasi Anda : ' . base_url() . 'HM/info/' . urlencode($token) . ' ' . $data_link . ' ');
 
         if ($this->email->send()) {
             return true;
         } else {
             echo $this->email->print_debugger();
             die;
-        }
-    }
-
-    private function _sendEmail($token, $email_penerima, $data_link)
-    {
-        $email_saya = 'hima@unma.ac.id';
-        $password_email = 'H&Mb{4!K6gh?YoX.|04M6S,ENw;w,$';
-        $this->load->library('encryption');
-        $this->load->library('PHPMailer_load'); //Load Library PHPMailer
-        $mail = $this->phpmailer_load->load(); // Mendefinisikan Variabel Mail
-        $mail->isSMTP();  // Mengirim menggunakan protokol SMTP
-        $mail->Host = 'smtp.gmail.com'; // Host dari server SMTP
-        $mail->SMTPAuth = true; // Autentikasi SMTP
-        $mail->Username =  $email_saya;
-        $mail->Password = $password_email;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-        $mail->setFrom($email_saya, 'HIMA UNMA'); // Sumber email
-        $mail->addAddress($email_penerima); // Masukkan alamat email dari variabel $email
-        $mail->Subject = "Informasi Peserta & Link Presensi Kegiatan"; // Subjek Email
-        $mail->msgHtml(
-            '
-           <html><body>
-            Berikut adalah link untuk : <br>
-            <a href="' . base_url() . 'HM/info/' . urlencode($token) . '">Informasi Anda</a>
-            <br>' . $data_link . '
-            </body></html>'
-        ); // Isi email dengan format HTML
-
-        if (!$mail->send()) {
-            echo "Mailer Error: " . $mail->ErrorInfo;
-        } else {
-            return true;
         }
     }
     //INFO PESERTA
@@ -335,19 +297,11 @@ class HM extends CI_Controller
         $data['file']  = 'info';
         $this->load->view('front/index', $data);
     }
-
     //LAINNYA
     public function block()
     {
         $data['title'] = "Error Not Found";
         $data['file']   = 'block';
         $this->load->view('front/index', $data);
-    }
-
-    public function test()
-    {
-        // echo $_SESSION['id_mj'];
-        $data = $this->mj_model->get_mj_aktif(14);
-        print_r(json_encode($data));
     }
 }
