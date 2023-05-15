@@ -200,7 +200,6 @@
                 </div>
 
                 <h5 class="card-title mt-2">Deskripsi Kegiatan</h5>
-                <!-- <trix-editor input="deskripsi" style="width:100%;"></trix-editor> -->
                 <textarea id="deskripsi" name="deskripsi"></textarea>
             </div>
         </div>
