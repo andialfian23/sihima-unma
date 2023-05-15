@@ -9,10 +9,6 @@ application/logs/*
 !application/logs/.htaccess
 
 composer.lock
-
-/db/
-/images/
-/media_library/
 /vendor/
 
 # IDE Files
