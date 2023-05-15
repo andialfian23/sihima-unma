@@ -1,0 +1,1 @@
+<iframe src="<?= pengesahan($col['pengesahan']) ?>" width="794"></iframe>

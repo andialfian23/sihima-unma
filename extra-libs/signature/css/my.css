@@ -1,0 +1,44 @@
+
+body {
+    background-image: url(../img/1620220695044-unma.jpg);
+}
+
+.mf_signature_wrapper {
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    padding-bottom: 0px !important;
+}
+
+.m-signature-pad-body {
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    color: #bbbabb;
+    height: 250px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mf_signature_switch {
+    margin-bottom: 2px;
+}
+
+.mf_signature_switch a {
+    text-decoration: none;
+    font-family: Arial, Verdana, Helvetica;
+    margin-bottom: 3px;
+}
+
+.mf_signature_switch a:visited {
+    color: #3661A1;
+    text-decoration: none;
+}
+
+.mf_signature_switch a.active {
+    text-decoration: none;
+    border-bottom: none;
+    background-color: #6d6d6d;
+    border-radius: 3px;
+    padding: 5px;
+    color: #fff;
+}

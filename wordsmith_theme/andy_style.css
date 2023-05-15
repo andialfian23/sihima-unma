@@ -1,0 +1,110 @@
+@media print {
+	html body .s-content {
+		padding-top: 0px !important;
+	}
+
+	.d-print-none {
+		display: none !important;
+	}
+
+	@page {
+		size: landscape
+	}
+}
+
+.s-content {
+	background-color: #dddddd;
+}
+
+.text-danger {
+	color: #ff0000;
+}
+
+
+ul,ol {
+	list-style-type: none;
+}
+p, label {
+	font-family: sans-serif;
+}
+
+/* CSS Tab styling is start here */
+
+	/* Tab menu styling*/
+	input.tab-menu-radio {
+		display: none;
+	}
+	label.tab-menu {
+		display: inline-block;
+		/* float: left; */
+		padding:10px 30px;
+		cursor: pointer;
+		z-index: 99;
+	}
+	/* End Tab menu styling*/
+
+	/* Tab content styling*/
+	
+	.tab-content {
+		top:-3px;
+		clear: both;
+		width: 100%;
+		position: relative;
+		padding:20px;
+		background-color: #f7f7f7;
+		border-top:7px solid #111860;
+	}	
+	/* End Tab content styling*/
+
+	/* CSS tab core */
+	.tab-menu-radio:checked + label {
+		-webkit-transition:all 1s; /* Optional */
+		-moz-transition:all 1s; /* Optional */
+		transition:all 1s; /* Optional */
+		background-color: #111860;
+		color: #fff;
+	}
+	/* End CSS tab core */
+
+/* CSS Tab Styling is end here */
+
+/* TABLE */
+.table2 {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 1rem;
+	background-color: transparent;
+}
+.table2 tbody td {
+	padding: 5px 5px;
+	vertical-align: middle;
+	border-top: 1px solid #dee2e6;
+}
+.table2 thead th {
+	padding: 1rem;
+	vertical-align: middle;
+	border-top: 1px solid #dee2e6;
+}
+.table2 thead th {
+	vertical-align: bottom;
+	border-bottom: 1px solid #dee2e6;
+}
+.table2 tbody + tbody {
+	border-top: 1px solid #dee2e6;
+}
+.table2 {
+	background-color: #eeeeee;
+}
+
+.d-none{display:none!important}
+
+.entries .item-entry__title{
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+.entries .imgLogo{
+	padding:4%;
+}
+.entries .item-entry__thumb-link .hima{
+	max-width: 60%;
+}
