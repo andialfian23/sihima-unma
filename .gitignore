@@ -9,16 +9,23 @@ application/logs/*
 !application/logs/.htaccess
 
 composer.lock
-/vendor/
 
-# IDE Files
-#-------------------------
-/nbproject/
-.idea/*
+assets/sk/*
+!assets/sk/index.html
 
-## Sublime Text cache files
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
+images/*
+!images/index.html
+!images/cover/index.html
+!images/foto/index.html
+!images/logo/index.html
+!images/qrcode/index.html
+!images/ttd/index.html
+
+media_library/*
+!media_library/index.html
+!media_library/dokumentasi/index.html
+!media_library/images/index.html
+!media_library/posts/index.html
+!media_library/pengesahan/index.html
+
+vendor/
