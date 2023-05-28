@@ -30,113 +30,41 @@ class Auth extends CI_Controller
         // $this->load->view('auth/401.php');
     }
 
-    function forbid()
-    {
-        $this->load->view('auth/401.php');
-    }
-
-    function verify($id = NULL)
+    function verify_v2($id = NULL)
     {
         if ($id == NULL) {
             redirect(base_url('auth'));
         }
-        $ciphertext = base64_decode($id . "==");
-        $this->session->set_tempdata('ciphertext', $ciphertext, 120);
-        $this->load->view('auth/index');
-    }
 
-    function g2fa($id = NULL)
-    {
-        if ($id == NULL) {
-            redirect(base_url('auth'));
+        $this->encryption->initialize(array(
+            'cipher' => 'aes-256',
+            'mode' => 'ctr',
+            'key' => '4CrgnHEzNVogONMBKm4xnvbmLsMTIqfK'
+        ));
+
+        $plain_text = NULL;
+        $plain_text = $this->encryption->decrypt(base64_decode($id));
+        // print_r($plain_text);
+        // die;
+
+        if ($plain_text == NULL) {
+            $this->result(0, $plain_text);
+        } else {
+            $this->result(1, $plain_text);
         }
-        $ciphertext = base64_decode($id . '==');
-        $this->session->set_tempdata('ciphertext', $ciphertext, 120);
-        $this->load->view('auth/index_g2fa');
     }
 
-    function otp($id = NULL, $proc = NULL)
-    {
-        //prepare data
-        //if($id==NULL){redirect(base_url('auth'));}
-        $id          = $this->input->post('id');
-        $proc        = $this->input->post('proc');
-
-        //IF TYPE OTP
-        if ($proc == 'otp') {
-            $salt_key    = '4CrgnHEzNVogONMBKm4xnvbmLsMTIqfK' . $id;
-            $ciphertext = NULL;
-            $ciphertext = $_SESSION['ciphertext'];
-
-            //decrypt data
-            $this->encryption->initialize(array(
-                'cipher' => 'aes-256',
-                'mode' => 'ctr',
-                'key' => $salt_key
-            ));
-            $plain_text = NULL;
-            $plain_text = $this->encryption->decrypt($ciphertext);
-            $data = explode('#', $plain_text);
-
-            //REDESIGN ORDER
-            //[0] = OTP
-            //[1] = USERNAME (id_mahasiswa,nidn,nik_pgw)
-            //[2] = ID_LEVEL
-            //[3] = APP_LEVEL
-            //[4] = SRC_DETAIL
-
-            if ($plain_text == NULL or $data[0] != $id) {
-                $this->result(0, $plain_text);
-            } else {
-                $this->result(1, $plain_text);
-            }
-
-            //IF TYPE G2FA
-        }
-        // else {
-
-        //     $this->load->library('GoogleAuthenticator');
-        //     $ga = new GoogleAuthenticator();
-
-        //     $ciphertext = NULL;
-        //     $ciphertext = $_SESSION['ciphertext'];
-
-        //     //dekrip data
-        //     $this->encryption->initialize(array(
-        //         'driver' => 'mcrypt',
-        //         'cipher' => 'cast5',
-        //         'mode' => 'cbc',
-        //         'key' => '4CrgnHEzNVogONMBKm4xnvbmLsMTIqfK'
-        //     ));
-        //     $plain_text = NULL;
-        //     $plain_text = $this->encryption->decrypt($ciphertext);
-        //     $data = explode('#', $plain_text);
-
-        //     //REDESIGN ORDER
-        //     //[0] = OTP
-        //     //[1] = USERNAME (id_mahasiswa,nidn,nik_pgw)
-        //     //[2] = ID_LEVEL
-        //     //[3] = APP_LEVEL
-        //     //[4] = SRC_DETAIL
-        //     //[5] = G2FA
-
-        //     $checkResult = $ga->verifyCode($data[5], $id);
-        //     if ($checkResult) {
-        //         $this->result(1, $plain_text);
-        //     } else {
-        //         $this->result(0, $plain_text);
-        //     }
-        // }
-    }
-
-    function result($result, $plain_text)
+    private function result($result, $plain_text)
     {
         $data = explode('#', $plain_text);
+        //REDESIGN ORDER
+        //[0] = TIME     | 2023-05-28 13:41:03
+        //[1] = USERNAME | 180137
+        //[2] = ID_LEVEL | 105   
+        //[3] = APP_LEVEL   | 1
+        //[4] = SRC_DETAIL  | 2
         if ($result == 0) {
             //GAGAL
-            $warna      = 'danger';
-            $alert_test = '<strong>Maaf!</strong> Kode OTP yang anda masukan salah.';
-            $countdown  = 'Bye..';
             // $location = 'https://satu.unma.ac.id';
             $location   = base_url('auth');
         } else {
@@ -148,8 +76,6 @@ class Auth extends CI_Controller
             $_SESSION['src_detail'] = $data[4]; //SRC_DETAIL 
 
             // //generate token
-            // $api_key = json_decode($this->curl->simple_get(ADD_API . 'simak/token?username=' . $this->session->userdata('username')))[0];
-            // $_SESSION['API_KEY'] =  $api_key->api_token;
             $_SESSION['level_name'] = json_decode($this->curl->simple_get(ADD_API . 'ref/level?id_level=' . $data[2]))[0]->level_name;
 
             //GET USER DATA
@@ -246,31 +172,10 @@ class Auth extends CI_Controller
             $landing_page = "dashboard";
 
             // SUKSES
-            $warna = 'success';
-            $alert_test = '<strong>Selamat!</strong> Kode OTP yang anda masukan valid.';
-            $countdown = 'Go..';
             $location = base_url($landing_page);
         }
 
-        $result = ' <div class="alert alert-' . $warna . ' border-0 my-2" role="alert">' . $alert_test . '</div>
-                    <div class="alert border-0" role="alert">
-                        <i class="la la-spinner spinner"></i> 
-                        Anda akan diarahkan ke halaman utama dalam <div id="countdown">3 detik</div>. 
-                        Atau klik <a class="alert-link" href="' . $location . '">disini</a>
-                    </div>
-                    <script type="text/javascript">
-                        var timeleft = 2;
-                        var downloadTimer = setInterval(function(){
-                            document.getElementById("countdown").innerHTML = timeleft + " detik";
-                            timeleft -= 1;
-                            if(timeleft <= 0){
-                            clearInterval(downloadTimer);
-                            document.getElementById("countdown").innerHTML = "' . $countdown . '"
-                            }
-                        }, 1000);
-                        setTimeout(function () { window.location.replace("' . $location . '");}, 3000);
-                    </script>';
-        echo $result;
+        redirect($location);
     }
 
     public function logout()
@@ -291,25 +196,27 @@ class Auth extends CI_Controller
 
 
         // $_SESSION['logged_in'] = FALSE;
-        unset($_SESSION['active_smt'],
+        unset(
+            $_SESSION['active_smt'],
 
-        $_SESSION['id_app'],
-        $_SESSION['username'],
-        $_SESSION['id_level'],
-        $_SESSION['app_level'],
-        $_SESSION['src_detail'],
-        $_SESSION['level_name'],
+            $_SESSION['id_app'],
+            $_SESSION['username'],
+            $_SESSION['id_level'],
+            $_SESSION['app_level'],
+            $_SESSION['src_detail'],
+            $_SESSION['level_name'],
 
-        $_SESSION['kode_fak'],
-        $_SESSION['nama_fak'],
-        $_SESSION['kode_prodi'],
-        $_SESSION['nama_prodi'],
+            $_SESSION['kode_fak'],
+            $_SESSION['nama_fak'],
+            $_SESSION['kode_prodi'],
+            $_SESSION['nama_prodi'],
 
-        $_SESSION['id_user'],
-        $_SESSION['nama_user'],
+            $_SESSION['id_user'],
+            $_SESSION['nama_user'],
 
-        $_SESSION['API_KEY'],
-        $_SESSION['kode_bayar']);
+            $_SESSION['API_KEY'],
+            $_SESSION['kode_bayar']
+        );
 
         echo "  halaman akan tertutup dalam 2 detik
                 <script>
