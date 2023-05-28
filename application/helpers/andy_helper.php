@@ -192,9 +192,9 @@ function halaman($base_url, $total_data)
     $ieu->pagination->initialize($config);
 }
 //ENCRYPT OTP
-function encrypt_otp($otp, $msg)
+function encrypt_encode($msg)
 {
-    $salt_key = '4CrgnHEzNVogONMBKm4xnvbmLsMTIqfK' . $otp;
+    $salt_key = '4CrgnHEzNVogONMBKm4xnvbmLsMTIqfK';
     $ci = get_instance();
     $ci->encryption->initialize(array(
         'cipher' => 'aes-256',

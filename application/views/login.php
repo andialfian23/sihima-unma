@@ -26,16 +26,16 @@
                                     foreach ($result as $t) {
                                         $msg = [];
                                         $id_user = ($t['app_level'] == '1') ? $t['id_user'] : $t['username'];
+                                        $time = date('Y-m-d H:i:s');
+                                        $msg = "$time#" . $id_user . "#" . $t['id_level'] . "#" . $t['app_level'] . "#" . $t['src_detail'];
 
-                                        $msg = "$otp#" . $id_user . "#" . $t['id_level'] . "#" . $t['app_level'] . "#" . $t['src_detail'];
-
-                                        $id = encrypt_otp($otp, $msg);
-                                        ?>
+                                        $id = encrypt_encode($msg);
+                                    ?>
 
                                         <div class="col-md-3 col-sm-4">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <a href="<?= base_url("Auth/verify/" . $id) ?>" class="btn-info text-white btn card-link btn-block">
+                                                    <a href="<?= base_url("Auth/verify_v2/" . $id) ?>" class="btn-info text-white btn card-link btn-block">
                                                         <?= $t['nama_user'] ?>
                                                     </a>
                                                 </div>
