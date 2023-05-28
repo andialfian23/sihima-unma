@@ -27,7 +27,7 @@ class Auth extends CI_Controller
         //--END LOCAL OTP--//
 
 
-        // $this->load->view('auth/401.php');
+        // $this->load->view('401.php');
     }
 
     function verify_v2($id = NULL)
