@@ -84,8 +84,7 @@
             </div>
         </div>
 
-
-        <table width="100%" class="table table-bordered table-hover table-sm nowrap" id="dataTables-pemilih">
+        <table width="100%" class="table table-bordered table-hover table-sm nowrap" id="dataTables-sihima">
             <thead>
                 <tr>
                     <th>Level</th>
@@ -117,7 +116,7 @@
         </table>
         <script type="text/javascript">
             $(document).ready(function() {
-                $('#dataTables-pemilih').DataTable();
+                $('#dataTables-sihima').DataTable();
             });
         </script>
 

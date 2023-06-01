@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <table width="100%" class="table table-bordered table-hover table-sm" id="dataTables-pemilih">
+        <table width="100%" class="table table-bordered table-hover table-sm" id="dataTables-sihima">
             <thead>
                 <tr>
                     <th>Controller</th>
@@ -114,7 +114,7 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                $('#dataTables-pemilih').DataTable();
+                $('#dataTables-sihima').DataTable();
             });
         </script>
     </div>
