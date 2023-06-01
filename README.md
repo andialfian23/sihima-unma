@@ -1,5 +1,5 @@
 # SIHIMA-UNMA
-[Sistem Informasi Manajemen Himpunan Mahasiswa Universitas Majalengka](https://hima.unma.ac.id/) adalah sistem informasi yang dibuat dan dikembangkan oleh Andi Alfian dengan menggunakan bahasa pemrograman web dan framework CodeIgniter 3. Untuk desain tampilan front-end anya menggunakan template [Wordsmith](https://colorlib.com/wp/template/wordsmith) . Sistem informasi ini memiliki fitur :<br>
+[Sistem Informasi Manajemen Himpunan Mahasiswa Universitas Majalengka](https://hima.unma.ac.id/) adalah sistem informasi yang dibuat dan dikembangkan oleh Andi Alfian dengan menggunakan bahasa pemrograman web dan framework CodeIgniter 3. Untuk desain tampilan front-end nya menggunakan template [Wordsmith](https://colorlib.com/wp/template/wordsmith) . Sistem informasi ini memiliki fitur :<br>
 - Pengelolaan Data Himpunan Mahasiswa yang ada di Univesitas Majalengka
 - Manajemen Data Anggota Pengurus Himpunan.
 - Manajemen Data Kegiatan dan Postingan.
