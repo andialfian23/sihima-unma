@@ -11,9 +11,11 @@ class Post extends CI_Controller
     }
     public function index() //view insert postingan
     {
-        $data['title'] = 'Tambah Postingan Baru';
-        $data['tampil'] = $this->db->get('t_kategori')->result_array();
-        backEnd('post/i_post', $data);
+        $this->load->view('dashboard/template/main', [
+            'title'  => 'Tambah Postingan Baru',
+            'tampil' => $this->db->get('t_kategori')->result_array(),
+            'file'   => 'post/i_post',
+        ]);
     }
     public function add() //proses insert postingan
     {
@@ -25,7 +27,7 @@ class Post extends CI_Controller
             notifikasi('Postingan baru berhasil ditambahkan!!!', true);
             $cover = $proses_upload['file_name'];
             $time = date("Y-m-d H:i:s");
-            $data1 = array(
+            $values = array(
                 'id_mj'             => $_SESSION['id_mj'],
                 'id_mahasiswa_pt'   => $_SESSION['id_mahasiswa_pt'],
                 'id_kategori'       => post_gan('kategori'),
@@ -37,7 +39,7 @@ class Post extends CI_Controller
                 'is_published'      => post_gan('is_published'),
                 'created_at'        => $time,
             );
-            $this->mydb->input_dt($data1, 't_post');
+            $this->mydb->input_dt($values, 't_post');
             $response = 1;
         }
         echo $response;
@@ -48,12 +50,15 @@ class Post extends CI_Controller
             notifikasi('Postingan tidak ditemukan', false);
             redirect(base_url("Pengurus/postinganku"));
         }
-        $data['title'] = 'Edit Postingan';
-        $cek = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
-        if ($cek->num_rows() > 0) {
-            $data['col'] = $cek->row_array();
-            $data['tampil'] = $this->db->get('t_kategori')->result_array();
-            backEnd('post/e_post', $data);
+
+        $post = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
+        if ($post->num_rows() > 0) {
+            $this->load->view('dashboard/template/main', [
+                'title'  => 'Edit Postingan',
+                'post'   => $post->row_array(),
+                'tampil' => $this->db->get('t_kategori')->result_array(),
+                'file'   => 'post/e_post'
+            ]);
         } else {
             notifikasi('Postingan tidak ditemukan', false);
             redirect(base_url("Pengurus/postinganku"));
@@ -162,8 +167,8 @@ class Post extends CI_Controller
     function is_published($status = null)
     {
         $id = $this->uri->segment('4');
-        $cek = $this->post_model->get_post($id, $_SESSION['id_mahasiswa_pt']);
-        if ($cek->num_rows() > 0) {
+        $post = $this->post_model->get_post($id, $_SESSION['id_mahasiswa_pt']);
+        if ($post->num_rows() > 0) {
             $where  = ['id_post' => $id];
             $set    = ['is_published' => $status];
             $this->mydb->update_dt($where, $set, 't_post');
@@ -185,11 +190,11 @@ class Post extends CI_Controller
             notifikasi('Postingan tidak ditemukan', false);
             redirect(base_url("Pengurus/postinganku"));
         }
-        $cek = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
-        if ($cek->num_rows() > 0) {
+        $post = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
+        if ($post->num_rows() > 0) {
             //HAPUS POST
             $where = ['id_post' => $id_post];
-            $data = $cek->row_array();
+            $data = $post->row_array();
 
             unlink(FCPATH . 'media_library/images/' . $data['cover']);
 

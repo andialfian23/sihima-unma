@@ -26,9 +26,10 @@ class Jabatan extends CI_Controller
         $this->form_validation->set_rules('tgl_awal', 'tgl_awal', 'trim');
         $this->form_validation->set_rules('tgl_akhir', 'tgl_akhir', 'trim');
         if ($this->form_validation->run() == false) {
-            $data['title'] =  "Tambah Masa Jabatan";
-            $data['file']   = 'jabatan/i_mj';
-            $this->load->view('template/index', $data);
+            $this->load->view('dashboard/template/main', [
+                'title' => "Tambah Masa Jabatan",
+                'file'  => 'masa_jabatan/i_mj',
+            ]);
         } else {
             $id_hima = ($_SESSION['role_id'] == '1') ? post_gan('hima') : $_SESSION['hima_id'];
 
@@ -77,7 +78,7 @@ class Jabatan extends CI_Controller
     {
         $mj = $this->db->get_where('t_masa_jabatan', ['id_mj' => $id_mj, 'status_mj' => '1']);
         if ($mj->num_rows() > 0) {
-            $data['col'] = $mj->row_array();
+            $mj = $mj->row_array();
             $this->form_validation->set_rules('periode1', 'periode1', 'required|trim', [
                 'required' => 'Periode tidak boleh kosong'
             ]);
@@ -87,9 +88,11 @@ class Jabatan extends CI_Controller
             $this->form_validation->set_rules('tgl_awal', 'tgl_awal', 'trim');
             $this->form_validation->set_rules('tgl_akhir', 'tgl_akhir', 'trim');
             if ($this->form_validation->run() == false) {
-                $data['title'] =  "Edit Masa Jabatan";
-                $data['file']   = 'jabatan/e_mj';
-                $this->load->view('template/index', $data);
+                $this->load->view('dashboard/template/main', [
+                    'title' => "Edit Masa Jabatan",
+                    'mj'    => $mj,
+                    'file'  => 'masa_jabatan/e_mj',
+                ]);
             } else {
                 $where = ['id_mj' => $id_mj];
                 $sk = $_FILES['sk']['name'];
@@ -101,7 +104,7 @@ class Jabatan extends CI_Controller
                     if ($this->upload->do_upload('sk')) {
                         $sk = $this->upload->data('file_name');
                         $this->mydb->update_dt($where, ['sk' => $sk], 't_masa_jabatan');
-                        unlink(FCPATH . 'assets/sk/' . $data['col']['sk']); //cover
+                        unlink(FCPATH . 'assets/sk/' . $mj['sk']); //cover
                     } else {
                         notifikasi($this->upload->display_errors(), false);
                         redirect(base_url("Jabatan/e_mj/" . $id_mj));
@@ -156,23 +159,27 @@ class Jabatan extends CI_Controller
         }
         redirect(base_url("Jabatan"));
     }
-    public function i_jabatan()  //INPUT NAMA JABATAN
+
+    // INPUT NAMA JABATAN
+    public function i_jabatan()
     {
         $this->form_validation->set_rules('jabatan', 'jabatan', 'required|trim|is_unique[t_jabatan.jabatan]', [
             'is_unique' => 'Nama Jabatan sudah ada',
             'required' => 'Nama Jabatan tidak boleh kosong'
         ]);
         if ($this->form_validation->run() == false) {
-            $data['title'] =  "Tambah Jabatan";
-            $data['tampil'] = $this->db->get('t_jabatan');
-            $data['file']   = 'jabatan/i_jabatan';
-            $this->load->view('template/index', $data);
+            $role = $this->db->where('level>', '3')->where('level<7')->get('t_role')->result_array();
+            $this->load->view('dashboard/template/main', [
+                'title' => "Tambah Jabatan",
+                'role'  => $role,
+                'file'  => 'jabatan/i_jabatan',
+            ]);
         } else {
-            $data = array(
+            $values = array(
                 'jabatan' => post_gan('jabatan'),
                 'level' => post_gan('level')
             );
-            $this->mydb->input_dt($data, 't_jabatan');
+            $this->mydb->input_dt($values, 't_jabatan');
             notifikasi('Jabatan Baru Berhasil Ditambahkan!!!', true);
             redirect(base_url("Dashboard"));
         }

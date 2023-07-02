@@ -12,12 +12,14 @@ class Himpunan extends CI_Controller
     public function index()
     {
         if ($_SESSION['role_id'] == '1') {
-            $data['title']      = 'Himpunan Mahasiswa';
-            $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-            $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-            $data['tampil']     = $this->db->get('t_hima')->result_array();
-            $data['file']   = 'hima/index';
-            $this->load->view('template/index', $data);
+            $himpunan = $this->db->get('t_hima')->result_array();
+            $this->load->view('dashboard/template/main', [
+                'title'      => 'Himpunan Mahasiswa',
+                'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+                'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+                'tampil'     => $himpunan,
+                'file'       => 'hima/index',
+            ]);
         } else {
             notifikasi('Anda Tidak Memiliki Hak Akses Ke Halaman Tersebut !!!', true);
             redirect(base_url('Dashboard'));
@@ -42,9 +44,10 @@ class Himpunan extends CI_Controller
                 'is_unique' => 'Nama Himpunan sudah digunakan !!'
             ]);
             if ($this->form_validation->run() == false) {
-                $data['title'] = 'Tambah Himpunan Mahasiswa';
-                $data['file']   = 'hima/i_hima';
-                $this->load->view('template/index', $data);
+                $this->load->view('dashboard/template/main', [
+                    'title' => 'Tambah Himpunan Mahasiswa',
+                    'file'  => 'hima/i_hima',
+                ]);
             } else {
                 $logo = $_FILES['logo']['name'];
                 if ($logo) {
@@ -171,11 +174,13 @@ class Himpunan extends CI_Controller
             'required' => 'Nama Himpunan tidak boleh kosong !!'
         ]);
 
-        $data['col'] = $this->db->get_where('t_hima', ['id_hima' => $id_hima])->row_array();
+        $himpunan = $this->db->get_where('t_hima', ['id_hima' => $id_hima])->row_array();
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Edit Data Himpunan';
-            $data['file']   = 'hima/e_hima';
-            $this->load->view('template/index', $data);
+            $this->load->view('dashboard/template/main', [
+                'col'   => $himpunan,
+                'title' => 'Edit Data Himpunan',
+                'file'  => 'hima/e_hima',
+            ]);
         } else {
             $where = ['id_hima' => $id_hima];
             $logo = $_FILES['logo']['name'];
@@ -187,10 +192,10 @@ class Himpunan extends CI_Controller
                 if ($this->upload->do_upload('logo')) {
                     $logo = $this->upload->data('file_name');
                     $this->mydb->update_dt($where, ['logo' => $logo], 't_hima');
-                    unlink(FCPATH . 'images/logo/' . $data['col']['logo']); //cover
+                    unlink(FCPATH . 'images/logo/' . $himpunan['logo']); //cover
                 } else {
                     notifikasi($this->upload->display_errors(), false);
-                    redirect(base_url("Himpunan/e_hima/" . $data['col']['id_hima']));
+                    redirect(base_url("Himpunan/e_hima/" . $himpunan['id_hima']));
                 }
             }
             $singkatan = post_gan('singkatan');
@@ -228,9 +233,10 @@ class Himpunan extends CI_Controller
             'numeric' => 'Nomor Telepon harus berupa numeric / bilangan'
         ]);
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Tambah Kontak yang dapat dihubungi';
-            $data['file']   = 'hima/i_contact_person';
-            $this->load->view('template/index', $data);
+            $this->load->view('dashboard/template/main', [
+                'title' => 'Tambah Kontak yang dapat dihubungi',
+                'file'  => 'hima/i_contact_person',
+            ]);
         } else {
             if ($_SESSION['role_id'] == '1') {
                 $id_hima = post_gan('id_hima');

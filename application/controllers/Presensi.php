@@ -21,10 +21,12 @@ class Presensi extends CI_Controller
             notifikasi('Himpunan tidak ditemukan !!!', false);
             redirect(base_url('HM/block'));
         }
-        $data['title'] = 'PRESENSI';
-        $data['token'] = $token;
-        $data['presensi'] = $this->absen->presensi($token);
-        $this->load->view('presensi/index', $data);
+
+        $this->load->view('presensi/index', [
+            'title'     => 'PRESENSI',
+            'token'     => $token,
+            'presensi'  => $this->absen->presensi($token),
+        ]);
     }
     public function proses_presensi()
     {

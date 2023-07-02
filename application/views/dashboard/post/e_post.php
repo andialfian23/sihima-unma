@@ -130,7 +130,7 @@
 
         // send data
         $.ajax({
-            url: '<?= base_url('Post/update/' . $col['id_post']) ?>',
+            url: '<?= base_url('Post/update/' . $post['id_post']) ?>',
             type: 'POST',
             data: dataset,
             contentType: false,
@@ -175,8 +175,8 @@
 </script>
 <div class="row">
     <div class="col-md-9 col-sm-12 mb-1">
-        <input autofocus type="text" class="form-control form-control-lg mb-1" name="judul" id="judul" placeholder="Judul Postingan Kegiatan/ Artikel" value="<?= $col['judul'] ?>">
-        <textarea id="isi_postingan" name="isi_postingan"><?= $col['body'] ?></textarea>
+        <input autofocus type="text" class="form-control form-control-lg mb-1" name="judul" id="judul" placeholder="Judul Postingan Kegiatan/ Artikel" value="<?= $post['judul'] ?>">
+        <textarea id="isi_postingan" name="isi_postingan"><?= $post['body'] ?></textarea>
     </div>
     <div class="col-md-3 col-sm-12">
         <button onclick="return submit_posts()" class="btn btn-lg btn-primary btn-block mb-1">Simpan</button>
@@ -184,7 +184,7 @@
             <div class="card-body text-dark">
                 <h5 class="card-title">Kategori Kegiatan/ Artikel</h5>
                 <select name="kategori" id="kategori" class="form-control">
-                    <option value="<?= $col['id_kategori'] ?>" hidden><?= $col['nama_kategori'] ?></option>
+                    <option value="<?= $post['id_kategori'] ?>" hidden><?= $post['nama_kategori'] ?></option>
                     <option value="9">Lainnya</option>
                     <option value="1">Kunjungan</option>
                     <option value="2">Perlombaan</option>
@@ -201,8 +201,8 @@
             <div class="card-body text-dark">
                 <h5 class="card-title">Cover</h5>
                 <div class="input-group">
-                    <input type="file" name="cover" class="form-control" id="cover" value="<?= $col['cover'] ?>">
-                    <img id="preview" src="<?= img_post($col['cover']);  ?>" width="100%" class="img-responsive mt-1" title="Double klik untuk menghapus gambar">
+                    <input type="file" name="cover" class="form-control" id="cover" value="<?= $post['cover'] ?>">
+                    <img id="preview" src="<?= img_post($post['cover']);  ?>" width="100%" class="img-responsive mt-1" title="Double klik untuk menghapus gambar">
                 </div>
             </div>
         </div>

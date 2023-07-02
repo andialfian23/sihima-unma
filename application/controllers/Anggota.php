@@ -17,11 +17,13 @@ class Anggota extends CI_Controller
     }
     public function all()
     {
-        $data['title']      = 'Mahasiswa';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['file']       = 'anggota/mahasiswa';
-        $this->load->view('template/index', $data);
+
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Mahasiswa',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'file'       => 'mahasiswa',
+        ]);
     }
     //PROSES ADD AKSES ANGGOTA
     public function p_i_anggota($npm = null)
@@ -61,13 +63,17 @@ class Anggota extends CI_Controller
             notifikasi('Data Sudah Termasuk Anggota Pengurus !!!', false);
             redirect(base_url('Dashboard/detail/' . $npm));
         } else {
-            $user = json_npm($npm);
-            $data['title']  = 'Tambah Anggota Pengurus';
-            $data['col']    = $user;
-            $data['mj']     = $this->mj_model->get_mj_aktif($_SESSION['hima_id']);
-            $data['tampil'] = $this->db->get('t_jabatan')->result_array();
-            $data['file']   = 'anggota/i_pengurus';
-            $this->load->view('template/index', $data);
+            $mhs = json_npm($npm);
+            $jabatan = $this->db->get('t_jabatan')->result_array();
+            $masa_jabatan = $this->mj_model->get_mj_aktif($_SESSION['hima_id']);
+
+            $this->load->view('dashboard/template/main', [
+                'title'  => 'Tambah Anggota Pengurus',
+                'col'    => $mhs,
+                'mj'     => $masa_jabatan,
+                'tampil' => $jabatan,
+                'file'   => 'anggota/i_pengurus',
+            ]);
         }
     }
     //PROSESS INPUT ANGGOTA PENGURUS
@@ -106,17 +112,21 @@ class Anggota extends CI_Controller
         $id_mj = $_SESSION['id_mj'];
         $cek_pengurus = $this->pengurus_model->cek_pengurus2($npm, $id_mj);
         if ($cek_pengurus->num_rows() > 0) {
-            $data['title'] = 'Edit Jabatan ';
-            $data['col'] = json_npm($npm);
             $this->form_validation->set_rules('id_jabatan', 'Jabatan', 'required|trim', [
                 'required' => 'Jabatan harus dipilih !!'
             ]);
             if ($this->form_validation->run() == false) {
-                $data['mj']     = $this->mj_model->get_masa_periode($id_mj)->row_array();
-                $data['tampil'] = $this->db->get('t_jabatan')->result_array();
-                $data['opt2']   = $this->pengurus_model->get_jabatan($npm, $id_mj);
-                $data['file']   = 'anggota/e_pengurus';
-                $this->load->view('template/index', $data);
+                $jabatan    = $this->db->get('t_jabatan')->result_array();
+                $pengurus   = $this->pengurus_model->get_jabatan($npm, $id_mj);
+                $masa_jabatan = $this->mj_model->get_masa_periode($id_mj)->row_array();
+                $this->load->view('dashboard/template/main', [
+                    'title'  => 'Edit Jabatan ',
+                    'mhs'    => json_npm($npm),
+                    'jabatan' => $jabatan,
+                    'mj'     => $masa_jabatan,
+                    'pengurus'   => $pengurus,
+                    'file'   => 'pengurus/e_pengurus',
+                ]);
             } else {
                 $where = ['id_mahasiswa_pt' => $npm, 'id_mj' => $id_mj];
                 $set = ['id_jabatan' => post_gan('id_jabatan')];

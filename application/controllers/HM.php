@@ -151,7 +151,6 @@ class HM extends CI_Controller
     //REGISTRASI
     public function register()
     {
-        $data['title'] = 'Registrasi';
         $this->form_validation->set_rules('nama', 'nama', 'required|trim|alpha_numeric_spaces', [
             'required' => 'Nama Tidak boleh dikosongkan !!',
         ]);
@@ -167,9 +166,11 @@ class HM extends CI_Controller
         ]);
 
         if ($this->form_validation->run() == false) {
-            $data['kegiatan'] = $this->kegiatan->kegiatan_umum();
-            $data['file']   = 'register';
-            $this->load->view('front/index', $data);
+            $this->load->view('front/index', [
+                'title'    => 'Registrasi',
+                'kegiatan' => $this->kegiatan->kegiatan_umum(),
+                'file'     => 'register',
+            ]);
         } else {
             $this->load->helper('string');
             $email = post_aman('email');
@@ -245,7 +246,7 @@ class HM extends CI_Controller
     private function _setEmail($token, $email_penerima, $data_link)
     {
         $email_saya = 'hima@unma.ac.id';
-        $password_email = 'H&Mb{4!K6gh?YoX.|04M6S,ENw;w,$';
+        $password_email = '********';
         $this->load->library('encryption');
         $config = [
             'protocol' => 'smtp',

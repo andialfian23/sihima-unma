@@ -58,14 +58,13 @@ class Kprodi extends CI_Controller
         }
     }
     //Anggota Pengurus
-    public function pengurus()
+    public function pengurus($id_mj = null)
     {
-        $segment_id_mj = $this->uri->segment('3');
-        if ($segment_id_mj != null) {
-            $id_mj = (!empty($segment_id_mj)) ? $segment_id_mj : $_SESSION['id_mj'];
-            $query = $this->MJ_model->get_masa_periode($id_mj);
-            if (($query->num_rows() > 0)) {
-                $mj = $query->row_array();
+        if ($id_mj != null) {
+            $id_mj = (!empty($id_mj)) ? $id_mj : $_SESSION['id_mj'];
+            $masa_jabatan = $this->MJ_model->get_masa_periode($id_mj);
+            if (($masa_jabatan->num_rows() > 0)) {
+                $mj = $masa_jabatan->row_array();
                 $id_hima = $mj['id_hima'];
             } else {
                 notifikasi('Data anggota tidak ditemukan', false);
@@ -74,28 +73,31 @@ class Kprodi extends CI_Controller
             $periode = $mj['periode'];
         } else {
             $id_hima = $_SESSION['hima_id'];
-            $id_mj  = $_SESSION['id_mj'];
+            $id_mj   = $_SESSION['id_mj'];
             $periode = $_SESSION['per_jabatan'];
         }
-        $data['id_mj']  = $id_mj;
-        $data['periode']    = $periode;
-        $data['kahim']      = $this->MJ_model->kahim($id_mj);
-
-        $data['title'] = 'Anggota Pengurus ' . $periode;
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js'] = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil'] = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
-        $data['file']   = 'anggota/anggota_pengurus';
-        $this->load->view('template/index', $data);
+        $kahim     = $this->MJ_model->kahim($id_mj);
+        $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Anggota Pengurus ' . $periode,
+            'id_mj'      => $id_mj,
+            'periode'    => $periode,
+            'kahim'      => $kahim,
+            'tampil'     => $penguruss,
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'file'       => 'pengurus/index',
+        ]);
     }
     //Anggota Lainnya
     public function anggota()
     {
-        $data['title']      = 'Anggota Lainnya ';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['file']   = 'anggota/mahasiswa';
-        $this->load->view('template/index', $data);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Anggota Lainnya ',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'file'       => 'mahasiswa',
+        ]);
     }
     public function kegiatan($segment_id_mj = null)
     {
@@ -115,11 +117,13 @@ class Kprodi extends CI_Controller
     }
     public function postingan()
     {
-        $data['title']      = 'Postingan Pengurus';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->post_model->get_postingan($_SESSION['id_mj']);
-        $data['file']   = 'post/postingan';
-        $this->load->view('template/index', $data);
+        $posts = $this->post_model->get_postingan($_SESSION['id_mj']);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Postingan Pengurus',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'tampil'     => $posts,
+            'file'       => 'post/index',
+        ]);
     }
 }

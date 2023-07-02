@@ -16,11 +16,12 @@ class Biaya_kegiatan extends CI_Controller
             notifikasi($notif, false);
             redirect('Dashboard');
         }
-        $kegiatan = $this->db->get_where('t_kegiatan', ['no_kegiatan' => $no_kg, 'id_mj' => $_SESSION['id_mj']]);
+        $kegiatan = $this->kegiatan->get_kegiatan($_SESSION['id_mj'], $no_kg);
         if (($kegiatan->num_rows() < 1)) {
             notifikasi($notif, false);
             redirect('Dashboard');
         }
+
         $jenis = 'pemasukan';
         $this->form_validation->set_rules('nama_item', 'Nama ' . $jenis, 'required|trim', [
             'required' => 'Nama ' . $jenis . ' tidak boleh kosong !!'
@@ -36,11 +37,12 @@ class Biaya_kegiatan extends CI_Controller
             'numeric' => 'Jumlah harus berupa numeric / bilangan'
         ]);
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Tambah Pemasukan -> Realisasi Biaya Kegiatan';
-            $data['col'] = $kegiatan->row_array();
-            $data['jenis'] = $jenis;
-            $data['file']   = 'biaya_kegiatan/add_item';
-            $this->load->view('template/index', $data);
+            $this->load->view('dashboard/template/main', [
+                'title'  => 'Tambah Pemasukan -> Realisasi Biaya Kegiatan',
+                'col'    => $kegiatan->row_array(),
+                'jenis'  => $jenis,
+                'file'   => 'biaya_kegiatan/add_item',
+            ]);
         } else {
             $this->add_item($no_kg, $jenis);
         }
@@ -52,7 +54,7 @@ class Biaya_kegiatan extends CI_Controller
             notifikasi($notif, false);
             redirect('Dashboard');
         }
-        $kegiatan = $this->db->get_where('t_kegiatan', ['no_kegiatan' => $no_kg, 'id_mj' => $_SESSION['id_mj']]);
+        $kegiatan = $this->kegiatan->get_kegiatan($_SESSION['id_mj'], $no_kg);
         if (($kegiatan->num_rows() < 1)) {
             notifikasi($notif, false);
             redirect('Dashboard');
@@ -72,11 +74,12 @@ class Biaya_kegiatan extends CI_Controller
             'numeric' => 'Jumlah harus berupa numeric / bilangan'
         ]);
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Tambah Pengeluaran -> Realisasi Biaya Kegiatan';
-            $data['col'] = $kegiatan->row_array();
-            $data['jenis'] = $jenis;
-            $data['file']   = 'biaya_kegiatan/add_item';
-            $this->load->view('template/index', $data);
+            $this->load->view('dashboard/template/main', [
+                'title' => 'Tambah Pengeluaran -> Realisasi Biaya Kegiatan',
+                'col'   => $kegiatan->row_array(),
+                'jenis' => $jenis,
+                'file'  => 'biaya_kegiatan/add_item',
+            ]);
         } else {
             $this->add_item($no_kg, $jenis);
         }
@@ -88,7 +91,7 @@ class Biaya_kegiatan extends CI_Controller
             redirect(base_url('dashboard'));
         }
 
-        $data_item = array(
+        $values = array(
             'jenis'     => $jenis,
             'nama_item' => post_aman('nama_item'),
             'harga'     => post_aman('harga'),
@@ -97,7 +100,7 @@ class Biaya_kegiatan extends CI_Controller
             'jumlah'    => post_aman('jumlah'),
             'no_kg'     => $no_kg,
         );
-        $this->mydb->input_dt($data_item, 't_biaya_kegiatan');
+        $this->mydb->input_dt($values, 't_biaya_kegiatan');
 
         notifikasi('Berhasil menambahkan ' . $jenis . ' !!!', true);
         redirect(base_url("Dashboard/realisasi_biaya/" . $no_kg));
@@ -108,6 +111,7 @@ class Biaya_kegiatan extends CI_Controller
             notifikasi('Gagal Menghapus Item Realisasi Biaya Kegiatan!!!', false);
             redirect('Dashboard');
         }
+
         $cek_biaya_kg = $this->kegiatan->cek_biaya($_SESSION['id_mj'], $id_biaya);
         if ($cek_biaya_kg->num_rows() > 0) {
             $kegiatan = $cek_biaya_kg->row_array();

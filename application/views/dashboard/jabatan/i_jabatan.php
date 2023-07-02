@@ -17,10 +17,9 @@
                     <div class="input-group">
                         <select name="level" id="level" class="form-control">
                             <?php
-                            $level = $this->db->where('level>', '3')->where('level<7')->get('t_role')->result_array();
-                            foreach ($level as $t) :
+                            foreach ($role as $r) :
                             ?>
-                                <option value="<?= $t['level'] ?>"><?= $t['role'] ?></option>
+                                <option value="<?= $r['level'] ?>"><?= $r['role'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

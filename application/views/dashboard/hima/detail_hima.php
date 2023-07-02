@@ -13,11 +13,11 @@ if ($admin > 0) { ?>
                     <select id="hima" name="hima" class="form-control">
                         <option value="<?= $col['id_hima'] ?>" hidden><?= $col['nama_hima'] ?></option>
                         <?php
-                            $hima = $this->db->get('t_hima')->result();
-                            foreach ($hima as $h) {
-                                echo '<option value="' . $h->kode_prodi . '"> ' . $h->nama_hima . '</option>';
-                            }
-                            ?>
+                        $hima = $this->db->get('t_hima')->result();
+                        foreach ($hima as $h) {
+                            echo '<option value="' . $h->kode_prodi . '"> ' . $h->nama_hima . '</option>';
+                        }
+                        ?>
                     </select>
                     <script>
                         $(document).ready(function() {
@@ -107,7 +107,7 @@ if ($admin > 0) { ?>
                     if ($col['contact_person'] != 'Belum Ditambahkan') :
                         foreach ($col['contact_person'] as $cp) {
                             if ($himpunan > 0) {
-                                ?>
+                    ?>
                                 <a href="<?= base_url('Himpunan/del_cp/' . $cp['id_cp']) ?>" class="text-danger" onclick="return confirm('Apakah anda yakin ingin menghapus data kontak <?= $cp['nama'] ?>')">(Hapus)</a>
                     <?php
                             }
@@ -131,7 +131,7 @@ if ($admin > 0) { ?>
             <?php if ($jabatan > 0) : ?>
                 <a class="btn btn-block btn-lg btn-info mb-2" href="<?= base_url('Jabatan/i_mj') ?>">Tambah Masa Jabatan</a>
             <?php endif;
-                if ($col['id_mj'] != false) : ?>
+            if ($col['id_mj'] != false) : ?>
                 <table width="100%" class="table responsive table-striped table-bordered table-hover nowrap" id="dataTables-sihima">
                     <thead>
                         <tr>
@@ -140,24 +140,24 @@ if ($admin > 0) { ?>
                             <th>Jumlah Pengurus</th>
                             <th>Status</th>
                             <?php
-                                    if ($jabatan > 0) {
-                                        ?>
+                            if ($jabatan > 0) {
+                            ?>
                                 <th>Aksi</th>
                             <?php
-                                    }
-                                    ?>
+                            }
+                            ?>
 
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                                foreach ($tampil as $t) {
-                                    ?>
+                        foreach ($tampil as $t) {
+                        ?>
                             <tr>
                                 <td>
                                     <?php
-                                                $link = (session_gan('role_id') == '2') ? base_url("Kprodi/pengurus/" . $t['id_mj']) : base_url("Pengurus/anggota/" . $t['id_mj']);
-                                                ?>
+                                    $link = ($_SESSION['role_id'] == '2') ? base_url("Kprodi/pengurus/" . $t['id_mj']) : base_url("Pengurus/anggota/" . $t['id_mj']);
+                                    ?>
                                     <a href="<?= $link; ?>">
                                         <?= $t['periode1'] ?>/<?= $t['periode2'] ?>
                                     </a>
@@ -166,16 +166,16 @@ if ($admin > 0) { ?>
                                 <td><?= $t['jml_pengurus'] ?></td>
                                 <td>
                                     <?php
-                                                if ($t['status_mj'] == '1') {
-                                                    echo '<b class="text-success">Aktif</b>';
-                                                } else {
-                                                    if (akses('Kprodi')->num_rows() > 0) {
-                                                        echo '<a href="' . base_url('Kprodi/is_active/' . $t['id_mj'] . '/1') . '" class="text-danger">Tidak Aktif</a>';
-                                                    } else {
-                                                        echo '<b class="text-danger">Non-Aktif</b>';
-                                                    }
-                                                }
-                                                ?>
+                                    if ($t['status_mj'] == '1') {
+                                        echo '<b class="text-success">Aktif</b>';
+                                    } else {
+                                        if (akses('Kprodi')->num_rows() > 0) {
+                                            echo '<a href="' . base_url('Kprodi/is_active/' . $t['id_mj'] . '/1') . '" class="text-danger">Tidak Aktif</a>';
+                                        } else {
+                                            echo '<b class="text-danger">Non-Aktif</b>';
+                                        }
+                                    }
+                                    ?>
                                 </td>
                                 <?php if ($jabatan > 0) { ?>
                                     <td>
@@ -192,8 +192,8 @@ if ($admin > 0) { ?>
                                 <?php } ?>
                             </tr>
                         <?php
-                                }
-                                ?>
+                        }
+                        ?>
                     </tbody>
                 </table>
                 <script type="text/javascript">
@@ -207,10 +207,10 @@ if ($admin > 0) { ?>
                     });
                 </script>
             <?php
-                else :
-                    echo "<p class='text-danger my-2'>Tidak Ada data Masa Jabatan pada <b>" . $col['nama_hima'] . "</b> !!!</p>";
-                endif;
-                ?>
+            else :
+                echo "<p class='text-danger my-2'>Tidak Ada data Masa Jabatan pada <b>" . $col['nama_hima'] . "</b> !!!</p>";
+            endif;
+            ?>
         </div>
     </div>
 <?php } ?>
@@ -226,7 +226,7 @@ if ($himpunan > 0) :
         $text = 'Aktifkan Himpunan';
         $status = '1';
     }
-    ?>
+?>
     <div class="row">
         <div class="col-lg-12">
             <a href="<?= base_url('Himpunan/status_hima/' . $status . '/' . $col['id_hima']) ?>" class="btn <?= $warna_btn; ?> btn-block mt-1">

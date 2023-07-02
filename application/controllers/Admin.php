@@ -10,12 +10,14 @@ class Admin extends CI_Controller
     }
     public function index()
     {
-        $data['title'] = 'Dashboard Admin';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js'] = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['admin'] = $this->mydb->get_admin();
-        $data['file']   = 'admin/index';
-        $this->load->view('template/index', $data);
+        $admin = $this->mydb->get_admin();
+        $this->load->view('dashboard/template/main', [
+            'title'     => 'Dashboard Admin',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js' => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'admin'     => $admin,
+            'file'      => 'admin/index',
+        ]);
     }
     public function cari_data()
     {
@@ -55,12 +57,12 @@ class Admin extends CI_Controller
                 }
             } else {
                 $mhs = json_npm($npm);
-                $data = [
+                $values = [
                     'id_mhs' => $mhs['id_mhs'],
                     'id_mahasiswa_pt' => $npm,
                     'is_admin' => '1'
                 ];
-                $this->mydb->input_dt($data, 't_user');
+                $this->mydb->input_dt($values, 't_user');
                 notifikasi('Berhasil menambahkan ' . $mhs['nm_pd'] . ' menjadi Admin', true);
             }
         } else {
@@ -86,10 +88,12 @@ class Admin extends CI_Controller
     //ROLE
     public function role()
     {
-        $data['title'] = 'Manajemen Role';
-        $data['tampil'] = $this->db->get('t_role')->result_array();
-        $data['file']   = 'admin/role';
-        $this->load->view('template/index', $data);
+        $role = $this->db->get('t_role')->result_array();
+        $this->load->view('template/index', [
+            'title'  => 'Manajemen Role',
+            'tampil' => $role,
+            'file'   => 'admin/role',
+        ]);
     }
     public function i_role()
     {
@@ -117,15 +121,17 @@ class Admin extends CI_Controller
             'required' => 'Nama Role tidak boleh kosong !!'
         ]);
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Edit Role';
-            $data['col'] = $this->db->get_where('t_role', $where)->row_array();
-            $data['file']   = 'admin/e_role';
-            $this->load->view('template/index', $data);
+            $role = $this->db->get_where('t_role', $where)->row_array();
+            $this->load->view('template/index', [
+                'title' => 'Edit Role',
+                'col'   => $role,
+                'file'  => 'admin/e_role',
+            ]);
         } else {
-            $data = [
+            $set = [
                 'role' => $this->input->post('role')
             ];
-            $this->mydb->update_dt($where, $data, 't_role');
+            $this->mydb->update_dt($where, $set, 't_role');
             notifikasi('Nama Role Berhasil Diubah', true);
             redirect(base_url('Admin/role'));
         }
@@ -140,10 +146,12 @@ class Admin extends CI_Controller
     //CONTROLLER MANAJEMEN
     public function controller()
     {
-        $data['title'] = 'Manajemen Controller';
-        $data['tampil'] = $this->db->order_by('id_ctr', 'ASC')->get('t_controller')->result_array();
-        $data['file']   = 'admin/controller';
-        $this->load->view('template/index', $data);
+        $controller = $this->db->order_by('id_ctr', 'ASC')->get('t_controller')->result_array();
+        $this->load->view('dashboard/template/main', [
+            'tampil' => $controller,
+            'title'  => 'Manajemen Controller',
+            'file'   => 'admin/controller',
+        ]);
     }
     public function i_ctr()
     {
@@ -173,17 +181,20 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('fitur', 'Fitur', 'required|trim', [
             'required' => 'Fitur Controller tidak boleh kosong !!'
         ]);
+        $controller = $this->db->get_where('t_controller', $where)->row_array();
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Edit Controller';
-            $data['col'] = $this->db->get_where('t_controller', $where)->row_array();
-            $data['file']   = 'admin/e_controller';
-            $this->load->view('template/index', $data);
+
+            $this->load->view('template/index', [
+                'title' => 'Edit Controller',
+                'col'   => $controller,
+                'file'  => 'admin/e_controller',
+            ]);
         } else {
-            $data = [
+            $values = [
                 'nama_controller' => $this->input->post('controller'),
                 'fitur' => $this->input->post('fitur')
             ];
-            $this->mydb->update_dt($where, $data, 't_controller');
+            $this->mydb->update_dt($where, $values, 't_controller');
             notifikasi('Data Controller Berhasil Diubah', true);
             redirect(base_url('Admin/controller'));
         }
@@ -202,11 +213,15 @@ class Admin extends CI_Controller
             notifikasi('Pilih role yang akan anda cek !!!', false);
             redirect(base_url('admin/role'));
         }
-        $data['col'] = $this->db->get_where('t_role', ['level' => $level])->row_array();
-        $data['title'] = 'Akses Menu : ' . $data['col']['role'];
-        $data['tampil'] = $this->db->get('t_controller')->result_array();
-        $data['file']   = 'admin/menu_access';
-        $this->load->view('template/index', $data);
+        $role       = $this->db->get_where('t_role', ['level' => $level])->row_array();
+        $controller = $this->db->get('t_controller')->result_array();
+
+        $this->load->view('dashboard/template/main', [
+            'col'    => $role,
+            'title'  => 'Akses Menu : ' . $role['role'],
+            'tampil' => $controller,
+            'file'   => 'admin/menu_access',
+        ]);
     }
     public function changeaccess()
     {
@@ -220,25 +235,51 @@ class Admin extends CI_Controller
 
         $result = $this->db->get_where('t_menu_access', $data);
 
-        if ($result->num_rows() < 1) {
-            $this->db->insert('t_menu_access', $data);
-        } else {
-            $this->db->delete('t_menu_access', $data);
-        }
+        ($result->num_rows() < 1)
+            ? $this->db->insert('t_menu_access', $data)
+            : $this->db->delete('t_menu_access', $data);
+
 
         notifikasi('Akses Berhasil Di ubah!!!', true);
     }
     //JABATAN
     public function jabatan()
     {
-        $data['title'] =  "Jabatan";
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js'] = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil'] = $this->mydb->get_jabatan_hima();
-        $data['file']   = 'jabatan/index';
-        $this->load->view('template/index', $data);
+        $this->load->view('dashboard/template/main', [
+            'title'     =>  "Jabatan",
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js' => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'tampil'    => $this->mydb->get_jabatan_hima(),
+            'file'      => 'jabatan/index',
+        ]);
     }
-    function del_jabatan($id_jabatan)   //HAPUS JABATAN
+    public function e_jabatan($id_jabatan = null)   //EDIT JABATAN
+    {
+        if ($id_jabatan == null) {
+            notifikasi('Gagal Mengakses Halaman Edit Jabatan !!!', false);
+            redirect('Dashboard');
+        }
+        $this->form_validation->set_rules('jabatan', 'jabatan', 'required|trim', [
+            'required' => 'Nama Jabatan tidak boleh kosong'
+        ]);
+        $where = ['id_jabatan' => $id_jabatan];
+        if ($this->form_validation->run() == false) {
+            $jabatan = $this->db->get_where('t_jabatan', $where)->row_array();
+            $this->load->view('dashboard/template/main', [
+                'title'     => "Edit Jabatan",
+                'jabatan'   => $jabatan,
+                'file'      => 'jabatan/e_jabatan',
+            ]);
+        } else {
+            $set = [
+                'jabatan' => $this->input->post('jabatan')
+            ];
+            $this->mydb->update_dt($where, $set, 't_jabatan');
+            notifikasi('Edit Jabatan Berhasil!!!', true);
+            redirect(base_url("Admin/jabatan"));
+        }
+    }
+    function del_jabatan($id_jabatan = null)    //HAPUS JABATAN
     {
         if ($id_jabatan == null) {
             notifikasi('Gagal Mengakses Halaman Hapus Jabatan !!!', false);
@@ -254,35 +295,12 @@ class Admin extends CI_Controller
         }
         redirect(base_url("Admin/jabatan"));
     }
-    public function e_jabatan($id_jabatan = null) //EDIT JABATAN
-    {
-        if ($id_jabatan == null) {
-            notifikasi('Gagal Mengakses Halaman Edit Jabatan !!!', false);
-            redirect('Dashboard');
-        }
-        $this->form_validation->set_rules('jabatan', 'jabatan', 'required|trim', [
-            'required' => 'Nama Jabatan tidak boleh kosong'
-        ]);
-        if ($this->form_validation->run() == false) {
-            $data['title'] =  "Edit Jabatan";
-            $data['col'] = $this->db->get_where('t_jabatan', ['id_jabatan' => $id_jabatan])->row_array();
-            $data['file']   = 'jabatan/e_jabatan';
-            $this->load->view('template/index', $data);
-        } else {
-            $data_edit = [
-                'jabatan' => $this->input->post('jabatan')
-            ];
-            $where = ['id_jabatan' => $id_jabatan];
-            $this->mydb->update_dt($where, $data_edit, 't_jabatan');
-            notifikasi('Edit Jabatan Berhasil!!!', true);
-            redirect(base_url("Admin/jabatan"));
-        }
-    }
     //ICON MENU
     public function icon()
     {
-        $data['title']    = 'IKON!!!!';
-        $data['file']   = 'admin/ikon';
-        $this->load->view('template/index', $data);
+        $this->load->view('dashboard/template/main', [
+            'title' => 'IKON !!!',
+            'file'  => 'admin/ikon',
+        ]);
     }
 }

@@ -17,11 +17,10 @@ class Pengurus extends CI_Controller
     {
         redirect(base_url('Pengurus/anggota'));
     }
-    public function anggota() //Anggota Pengurus
+    public function anggota($id_mj = null) //Anggota Pengurus
     {
-        $segment_id_mj = $this->uri->segment('3');
-        if ($segment_id_mj != null) {
-            $id_mj = (!empty($segment_id_mj)) ? $segment_id_mj : $_SESSION['id_mj'];
+        if ($id_mj != null) {
+            $id_mj = (!empty($id_mj)) ? $id_mj : $_SESSION['id_mj'];
             $query = $this->MJ_model->get_masa_periode($id_mj);
             if (($query->num_rows() > 0)) {
                 $mj = $query->row_array();
@@ -36,16 +35,19 @@ class Pengurus extends CI_Controller
             $id_mj   = $_SESSION['id_mj'];
             $periode = $_SESSION['per_jabatan'];
         }
-        $data['id_mj']      = $id_mj;
-        $data['periode']    = $periode;
-        $data['kahim']      = $this->MJ_model->kahim($id_mj);
 
-        $data['title']      = 'Anggota Pengurus ' . $periode;
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
-        $data['file']       = 'anggota/anggota_pengurus';
-        $this->load->view('template/index', $data);
+        $kahim     = $this->MJ_model->kahim($id_mj);
+        $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Anggota Pengurus ' . $periode,
+            'id_mj'      => $id_mj,
+            'periode'    => $periode,
+            'kahim'      => $kahim,
+            'tampil'     => $penguruss,
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'file'       => 'pengurus/index',
+        ]);
     }
     public function histori_pm()    //Histori Pemasukkan
     {
@@ -68,11 +70,13 @@ class Pengurus extends CI_Controller
     }
     public function postinganKu()   //Histori PostinganKu
     {
-        $data['title']      = 'Histori PostinganKu';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->post_model->get_postingan_ku($_SESSION['id_mahasiswa_pt']);
-        $data['file']       = 'post/postingan';
-        $this->load->view('template/index', $data);
+        $posts = $this->post_model->get_postingan_ku($_SESSION['id_mahasiswa_pt']);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Histori PostinganKu',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'tampil'     => $posts,
+            'file'       => 'post/index',
+        ]);
     }
 }
