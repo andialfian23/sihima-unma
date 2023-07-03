@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-md-12">
-        <form action="<?= base_url("Tagihan/p_i_tp/" . $col['no_tg']) ?>" method="post">
+        <form action="<?= base_url("Tagihan_anggota/p_i_tp/" . $tagihan['no_tg']) ?>" method="post">
             <div class=" table-responsive">
-                <p>Nama Tagihan : <?= $col['nama_tagihan'] ?></p>
-                <p>Nominal Tagihan : Rp <?= number_format($col['jml_tagihan']) ?></p>
+                <p>Nama Tagihan : <?= $tagihan['nama_tagihan'] ?></p>
+                <p>Nominal Tagihan : Rp <?= number_format($tagihan['jml_tagihan']) ?></p>
                 <table class="table table-bordered ">
                     <tbody class="customtable">
                         <tr>
@@ -14,16 +14,16 @@
                             <td scope="col"><b>Nama</b></td>
                         </tr>
                         <?php
-                        foreach ($tampil['result'] as $t) :
-                            $cek_ta = $this->tagihan->get_tg_anggota($col['no_tg'], $t['id_mahasiswa_pt']);
+                        foreach ($pengurus['result'] as $row) :
+                            $cek_ta = $this->tagihan->get_tg_anggota($tagihan['no_tg'], $row['id_mahasiswa_pt']);
                             if ($cek_ta->num_rows() < 1) {
                         ?>
                                 <tr>
                                     <th>
-                                        <input type="checkbox" class="listCheckbox" id="listCheckbox" name="id_mhs[]" value="<?= $t['id_mahasiswa_pt'] ?>" checked />
+                                        <input type="checkbox" class="listCheckbox" id="listCheckbox" name="id_mhs[]" value="<?= $row['id_mahasiswa_pt'] ?>" checked />
                                     </th>
-                                    <td><?= $t['id_mahasiswa_pt'] ?></td>
-                                    <td><?= $t['nm_pd'] ?></td>
+                                    <td><?= $row['id_mahasiswa_pt'] ?></td>
+                                    <td><?= $row['nm_pd'] ?></td>
                                 </tr>
                         <?php
                             }

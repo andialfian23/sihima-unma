@@ -1,6 +1,6 @@
 <?= form_error('cash_rule', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
 
-<a class="btn btn-block btn-lg btn-info mb-2" href="#" data-toggle="modal" data-target="#newSubMenuModal">Tambah Peraturan Keuangan</a>
+<a class="btn btn-block btn-lg btn-info mb-2" href="#" data-toggle="modal" data-target="#addCashRule">Tambah Peraturan Keuangan</a>
 
 <table width="100%" class="table responsive table-striped table-bordered table-hover no-wrap" id="dataTables-sihima">
     <thead>
@@ -37,6 +37,7 @@
         ?>
     </tbody>
 </table>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#dataTables-sihima').DataTable({
@@ -44,7 +45,8 @@
         });
     });
 </script>
-<div class="modal fade" id="newSubMenuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="addCashRule" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -53,7 +55,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url("Keuangan/cash_rule") ?>" method="post">
+            <form action="<?= base_url("Cash_rule/index") ?>" method="post">
                 <div class="modal-body">
                     <div class="form-group row">
                         <div class="col-sm-12">

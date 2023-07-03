@@ -2,9 +2,9 @@
 $total =  $jml_pengurus - $jml_tagihan_anggota;
 if ($total > 0) {
 ?>
-    <a class="btn btn-info mb-2" href="<?= base_url('Tagihan/i_tp/' . $tagihan['no_tg']) ?>">Pilih Anggota Pengurus</a>
+    <a class="btn btn-info mb-2" href="<?= base_url('Tagihan_anggota/i_tp/' . $tagihan['no_tg']) ?>">Pilih Anggota Pengurus</a>
 <?php } ?>
-<a class="btn btn-primary mb-2" href="<?= base_url('Tagihan/i_tmhs/' . $tagihan['no_tg']) ?>">Pilih Anggota Lainnya</a>
+<a class="btn btn-primary mb-2" href="<?= base_url('Tagihan_anggota/i_tmhs/' . $tagihan['no_tg']) ?>">Pilih Anggota Lainnya</a>
 
 <?php
 if ($tagihan_anggota->num_rows() > 0) {
@@ -21,32 +21,32 @@ if ($tagihan_anggota->num_rows() > 0) {
         </thead>
         <tbody>
             <?php $no = 1;
-            foreach ($tagihan_anggota->result_array() as $t) {
-                $nama = json_npm($t['id_mahasiswa_pt'])['nm_pd'];
+            foreach ($tagihan_anggota->result_array() as $row) {
+                $nama = json_npm($row['id_mahasiswa_pt'])['nm_pd'];
             ?>
                 <tr>
-                    <td><?= $t['id_mahasiswa_pt'] ?></td>
+                    <td><?= $row['id_mahasiswa_pt'] ?></td>
                     <td><?= $nama ?></td>
                     <td>Rp <?= number_format($tagihan['jml_tagihan']) ?></td>
                     <td>
                         <?php
                         $j = number_format($tagihan['jml_tagihan']);
-                        $n = number_format($t['dibayar']);
+                        $n = number_format($row['dibayar']);
                         if ($n == '0') {
                         ?>
-                            <a href="<?= base_url('Pembayaran/' . $t['no_ta']) ?>" class="text-danger">
+                            <a href="<?= base_url('Pembayaran/' . $row['no_ta']) ?>" class="text-danger">
                                 <b>Belum Bayar</b>
                             </a>
                         <?php
                         } elseif ($n == $j) {
                             echo 'Lunas';
                         } else {
-                            echo '<a href="' . base_url('Pembayaran/' . $t['no_ta']) . '">' . $n . '</a>';
+                            echo '<a href="' . base_url('Pembayaran/' . $row['no_ta']) . '">' . $n . '</a>';
                         }
                         ?>
                     </td>
                     <td>
-                        <a href="<?= base_url('Tagihan/del_tp/' . $t['no_ta']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus data tagihan <?= $tagihan['nama_tagihan'] . ' ' . $nama; ?> ini?')">
+                        <a href="<?= base_url('Tagihan_anggota/delete/' . $row['no_ta']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus data tagihan <?= $tagihan['nama_tagihan'] . ' ' . $nama; ?> ini?')">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>

@@ -33,7 +33,7 @@ class Tagihan_model extends CI_Model
     function get_tg_anggota($no_tg, $npm = null)
     {
         $this->db->select('a.*, id_mj, nama_tagihan, jml_tagihan')
-            ->from('t_tagihan_anggota a')->join('t_tagihan b', 'a.no_tg = b.no_tg')
+            ->from('t_tagihan_anggota a')->join('t_tagihan b', 'a.no_tg = b.no_tg', 'inner')
             ->where('a.no_tg', $no_tg);
         if ($npm == null) {
             return $this->db->get();

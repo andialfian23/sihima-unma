@@ -379,7 +379,7 @@ class Menu_model extends CI_Model
 				'menu_icon' => 'fas fa-file-contract',
 				'menu_child' =>	[
 					[
-						'menu_link' => 'Keuangan/cash_rule',
+						'menu_link' => 'Cash_rule/index',
 						'menu_text' => 'Peraturan Keuangan',
 					], [
 						'menu_link' => 'Tagihan',

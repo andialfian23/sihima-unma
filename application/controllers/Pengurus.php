@@ -51,22 +51,27 @@ class Pengurus extends CI_Controller
     }
     public function histori_pm()    //Histori Pemasukkan
     {
-        $data['title']      = 'Histori Pemasukan ' . $_SESSION['per_jabatan'];
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['kas']        = $this->tagihan->get_kas_himpunan($_SESSION['id_mj']);
-        $data['pemasukan']  = $this->keuangan->get_pemasukan($_SESSION['id_mj']);
-        $data['file']       = 'keuangan/histori_pemasukan';
-        $this->load->view('template/index', $data);
+        $pemasukans = $this->keuangan->get_pemasukan($_SESSION['id_mj']);
+        $tagihan = $this->tagihan->get_kas_himpunan($_SESSION['id_mj']);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Histori Pemasukan ' . $_SESSION['per_jabatan'],
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'kas'        => $tagihan,
+            'pemasukan'  => $pemasukans,
+            'file'       => 'pemasukan/index_pm',
+        ]);
     }
     public function histori_pk()    //Histori Pengeluaran
     {
-        $data['title']      = 'Histori Pengeluaran ' . $_SESSION['per_jabatan'];
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->keuangan->get_pengeluaran($_SESSION['id_mj']);
-        $data['file']       = 'keuangan/histori_pengeluaran';
-        $this->load->view('template/index', $data);
+        $pengeluarans = $this->keuangan->get_pengeluaran($_SESSION['id_mj']);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Histori Pengeluaran ' . $_SESSION['per_jabatan'],
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'tampil'     => $pengeluarans,
+            'file'       => 'pengeluaran/index_pk',
+        ]);
     }
     public function postinganKu()   //Histori PostinganKu
     {

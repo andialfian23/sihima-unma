@@ -89,7 +89,7 @@ class Admin extends CI_Controller
     public function role()
     {
         $role = $this->db->get('t_role')->result_array();
-        $this->load->view('template/index', [
+        $this->load->view('dashboard/template/main', [
             'title'  => 'Manajemen Role',
             'tampil' => $role,
             'file'   => 'admin/role',
@@ -122,7 +122,7 @@ class Admin extends CI_Controller
         ]);
         if ($this->form_validation->run() == false) {
             $role = $this->db->get_where('t_role', $where)->row_array();
-            $this->load->view('template/index', [
+            $this->load->view('dashboard/template/main', [
                 'title' => 'Edit Role',
                 'col'   => $role,
                 'file'  => 'admin/e_role',
@@ -184,7 +184,7 @@ class Admin extends CI_Controller
         $controller = $this->db->get_where('t_controller', $where)->row_array();
         if ($this->form_validation->run() == false) {
 
-            $this->load->view('template/index', [
+            $this->load->view('dashboard/template/main', [
                 'title' => 'Edit Controller',
                 'col'   => $controller,
                 'file'  => 'admin/e_controller',

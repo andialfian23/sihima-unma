@@ -13,21 +13,21 @@
     </thead>
     <tbody>
         <?php $no = 1;
-        foreach ($tampil->result_array() as $t) { ?>
+        foreach ($tagihan->result_array() as $row) { ?>
             <tr>
                 <td><?= $no ?></td>
-                <td><a href="<?= base_url("Tagihan/tg_pengurus/" . $t['no_tg']) ?>">
-                        <?= $t['nama_tagihan'] ?>
+                <td><a href="<?= base_url("Tagihan_anggota/detail/" . $row['no_tg']) ?>">
+                        <?= $row['nama_tagihan'] ?>
                     </a>
                 </td>
-                <td><?= $t['jml_tagihan'] ?></td>
-                <td><?= $t['created_at'] ?></td>
-                <td><?= $t['expired_at'] ?></td>
+                <td><?= $row['jml_tagihan'] ?></td>
+                <td><?= $row['created_at'] ?></td>
+                <td><?= $row['expired_at'] ?></td>
                 <td>
-                    <a href="<?= base_url('Tagihan/e_tg/' . $t['no_tg']) ?>" class="btn btn-info btn-sm">
+                    <a href="<?= base_url('Tagihan/e_tg/' . $row['no_tg']) ?>" class="btn btn-info btn-sm">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a href="<?= base_url('Tagihan/del_tg/' . $t['no_tg']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus tagihan <?= $t['nama_tagihan'] ?> ini?')">
+                    <a href="<?= base_url('Tagihan/delete/' . $row['no_tg']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus tagihan <?= $row['nama_tagihan'] ?> ini?')">
                         <i class="fa fa-trash"></i>
                     </a>
                 </td>

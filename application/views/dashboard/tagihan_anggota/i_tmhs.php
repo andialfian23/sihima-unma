@@ -1,11 +1,10 @@
 <div class="row">
     <div class="col-md-10">
-
         <div class="form-group row">
             <label for="nama_tagihan" class="col-md-3 col-form-label">Nama Tagihan</label>
             <div class="col-md-9">
                 <div class="input-group">
-                    <input name="nama_tagihan" id="nama_tagihan" class="form-control" value="<?= $col['nama_tagihan'] ?>" disabled />
+                    <input name="nama_tagihan" id="nama_tagihan" class="form-control" value="<?= $tagihan['nama_tagihan'] ?>" disabled />
                 </div>
             </div>
         </div>
@@ -13,11 +12,11 @@
             <label for="jml_tagihan" class="col-md-3 col-form-label">Jumlah Tagihan</label>
             <div class="col-md-6">
                 <div class="input-group">
-                    <input name="jml_tagihan" id="jml_tagihan" class="form-control" value="Rp <?= number_format($col['jml_tagihan']) ?>" disabled />
+                    <input name="jml_tagihan" id="jml_tagihan" class="form-control" value="Rp <?= number_format($tagihan['jml_tagihan']) ?>" disabled />
                 </div>
             </div>
         </div>
-        <form action="<?= base_url("Tagihan/i_tmhs/" . $col['no_tg']) ?>" method="POST">
+        <form action="<?= base_url("Tagihan_anggota/i_tmhs/" . $tagihan['no_tg']) ?>" method="POST">
             <div class="form-group row">
                 <label for="npm" class="col-md-3 col-form-label">NPM</label>
                 <div class="col-md-6">
@@ -33,21 +32,21 @@
             </div>
         </form>
         <?php
-        if ($col2 != 'LOL') {
+        if ($result != 'LOL') {
         ?>
             <hr>
             <div class="form-group row">
-                <label class="col-md-12 col-form-label">Hasil Pencarian : <b>NPM <?= $col2['id_mahasiswa_pt'] ?></b></label>
+                <label class="col-md-12 col-form-label">Hasil Pencarian : <b>NPM <?= $result['id_mahasiswa_pt'] ?></b></label>
             </div>
-            <form action="<?= base_url('Tagihan/p_i_tmhs') ?>" method="POST" accept-charset="utf-8">
+            <form action="<?= base_url('Tagihan_anggota/p_i_tmhs') ?>" method="POST" accept-charset="utf-8">
 
                 <div class="form-group row">
                     <label for="nama" class="col-md-3 col-form-label">Nama Lengkap</label>
                     <div class="col-md-9">
                         <div class="input-group">
-                            <input name="nama" id="nama" class="form-control" value="<?= $col2['nm_pd'] ?>" disabled />
-                            <input name="npm3" id="npm3" class="hidden" value="<?= $col2['id_mahasiswa_pt'] ?>" />
-                            <input name="no_tg" id="npm" class="hidden" value="<?= $col['no_tg'] ?>" />
+                            <input name="nama" id="nama" class="form-control" value="<?= $result['nm_pd'] ?>" disabled />
+                            <input name="npm3" id="npm3" class="hidden" value="<?= $result['id_mahasiswa_pt'] ?>" />
+                            <input name="no_tg" id="npm" class="hidden" value="<?= $tagihan['no_tg'] ?>" />
                         </div>
                     </div>
                 </div>
