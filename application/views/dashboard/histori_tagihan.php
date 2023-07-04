@@ -10,16 +10,16 @@
     </thead>
     <tbody>
         <?php $no = 1;
-        foreach ($tampil as $t) { ?>
+        foreach ($tampil as $row) { ?>
             <tr>
                 <td><?= $no ?></td>
-                <td><?= $t['nama_tagihan'] ?></td>
-                <td><?= number_format($t['jml_tagihan']) ?></td>
-                <td><?= $t['expired_at'] ?></td>
+                <td><?= $row['nama_tagihan'] ?></td>
+                <td><?= number_format($row['jml_tagihan']) ?></td>
+                <td><?= $row['expired_at'] ?></td>
                 <td>
                     <?php
-                    $jml = $t['jml_tagihan'];
-                    $u = $t['dibayar'];
+                    $jml = $row['jml_tagihan'];
+                    $u = $row['dibayar'];
                     if ($u == 0) {
                         echo "<b class='text-danger'>Belum Bayar</b>";
                     } elseif ($u == $jml) {

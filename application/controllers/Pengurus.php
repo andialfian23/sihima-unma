@@ -37,12 +37,14 @@ class Pengurus extends CI_Controller
         }
 
         $kahim     = $this->MJ_model->kahim($id_mj);
+        $masa_jabatans = $this->MJ_model->get_masa_jabatan($_SESSION['hima_id']);
         $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
         $this->load->view('dashboard/template/main', [
             'title'      => 'Anggota Pengurus ' . $periode,
             'id_mj'      => $id_mj,
             'periode'    => $periode,
             'kahim'      => $kahim,
+            'masa_jabatans' => $masa_jabatans,
             'tampil'     => $penguruss,
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),

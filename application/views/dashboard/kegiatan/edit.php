@@ -78,7 +78,7 @@
         // console.log(dataset);
 
         $.ajax({
-            url: '<?= base_url('Kegiatan/p_e_kg/' . $col['no_kegiatan']) ?>',
+            url: '<?= base_url('Kegiatan/p_e_kg/' . $kegiatan['no_kegiatan']) ?>',
             type: 'POST',
             data: dataset,
             contentType: false,
@@ -86,7 +86,7 @@
             success: function(response) {
                 toastr.success("Berhasil Menyimpan Data Kegiatan!");
                 setTimeout(function() {
-                    window.location.assign("<?= base_url('Dashboard/info_kegiatan/' . $col['no_kegiatan']) ?>");
+                    window.location.assign("<?= base_url('Dashboard/info_kegiatan/' . $kegiatan['no_kegiatan']) ?>");
                 }, 2000);
             }
         });
@@ -113,7 +113,7 @@
             <div class="card-body text-dark">
                 <h5 class="card-title">Nama Kegiatan</h5>
                 <div class="input-group">
-                    <input name="nama_kegiatan" id="nama_kegiatan" class="form-control" value="<?= $col['nama_kegiatan'] ?>" autofocus />
+                    <input name="nama_kegiatan" id="nama_kegiatan" class="form-control" value="<?= $kegiatan['nama_kegiatan'] ?>" autofocus />
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
             <div class="card-body text-dark">
                 <h5 class="card-title">Lingkup Kegiatan</h5>
                 <select name="lingkup" id="lingkup" class="form-control">
-                    <option value="<?= $col['lingkup'] ?>" hidden><?= $col['lingkup'] ?></option>
+                    <option value="<?= $kegiatan['lingkup'] ?>" hidden><?= $kegiatan['lingkup'] ?></option>
                     <option value="Pengurus">Pengurus</option>
                     <option value="Program Studi">Program Studi</option>
                     <option value="Fakultas">Fakultas</option>
@@ -134,7 +134,7 @@
                 </select>
                 <h5 class="card-title mt-2">Sifat Kegiatan</h5>
                 <select name="sifat" id="sifat" class="form-control">
-                    <option value="<?= $col['sifat_kegiatan'] ?>" hidden><?= $col['sifat_kegiatan'] ?></option>
+                    <option value="<?= $kegiatan['sifat_kegiatan'] ?>" hidden><?= $kegiatan['sifat_kegiatan'] ?></option>
                     <option value="Langsung">Langsung</option>
                     <option value="Online">Online</option>
                     <option value="Hybrid">Hybrid</option>
@@ -147,35 +147,35 @@
                 <div class="input-group row">
                     <label for="mulai" class="col-md-4 col-form-label">Mulai</label>
                     <div class="col-md-8">
-                        <input type="datetime-local" name="mulai" class="form-control" id="mulai" value="<?= $col['mulai'] ?>">
+                        <input type="datetime-local" name="mulai" class="form-control" id="mulai" value="<?= $kegiatan['mulai'] ?>">
                     </div>
                 </div>
                 <div class="input-group row">
                     <label for="selesai" class="col-md-4 col-form-label">Selesai</label>
                     <div class="col-md-8">
-                        <input type="datetime-local" name="selesai" class="form-control" id="selesai" value="<?= $col['selesai'] ?>">
+                        <input type="datetime-local" name="selesai" class="form-control" id="selesai" value="<?= $kegiatan['selesai'] ?>">
                     </div>
                 </div>
                 <div class="input-group row my-1">
                     <div class="col-md-12 col-sm-12">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input tombolCek" value="1" id="is_active" name="is_active" <?= (($col['mulai_absensi'] != $col['mulai']) && ($col['selesai_absensi'] != $col['selesai'])) ? 'checked' : ''; ?> onclick="return is_active()">
+                            <input type="checkbox" class="custom-control-input tombolCek" value="1" id="is_active" name="is_active" <?= (($kegiatan['mulai_absensi'] != $kegiatan['mulai']) && ($kegiatan['selesai_absensi'] != $kegiatan['selesai'])) ? 'checked' : ''; ?> onclick="return is_active()">
                             <label class="custom-control-label" for="is_active">Sesuaikan waktu absensi dengan waktu kegiatan</label>
                         </div>
                     </div>
                 </div>
-                <div id="formAbsen" class="mt-2 <?= (($col['mulai_absensi'] != $col['mulai']) && ($col['selesai_absensi'] != $col['selesai'])) ? 'd-none' : ''; ?>">
+                <div id="formAbsen" class="mt-2 <?= (($kegiatan['mulai_absensi'] != $kegiatan['mulai']) && ($kegiatan['selesai_absensi'] != $kegiatan['selesai'])) ? 'd-none' : ''; ?>">
                     <h5 class="card-title">Waktu Absensi</h5>
                     <div class="input-group row">
                         <label for="mulaiAbsen" class="col-md-4 col-form-label">Mulai</label>
                         <div class="col-md-8">
-                            <input type="datetime-local" name="mulaiAbsen" class="form-control" id="mulaiAbsen" value="<?= $col['mulai_absensi'] ?>">
+                            <input type="datetime-local" name="mulaiAbsen" class="form-control" id="mulaiAbsen" value="<?= $kegiatan['mulai_absensi'] ?>">
                         </div>
                     </div>
                     <div class="input-group row">
                         <label for="selesaiAbsen" class="col-md-4 col-form-label">Selesai</label>
                         <div class="col-md-8">
-                            <input type="datetime-local" name="selesaiAbsen" class="form-control" id="selesaiAbsen" value="<?= $col['selesai_absensi'] ?>">
+                            <input type="datetime-local" name="selesaiAbsen" class="form-control" id="selesaiAbsen" value="<?= $kegiatan['selesai_absensi'] ?>">
                         </div>
                     </div>
                 </div>
@@ -187,10 +187,10 @@
             <div class="card-body text-dark">
                 <h5 class="card-title">Tempat Kegiatan</h5>
                 <div class="input-group">
-                    <input name="tempat" id="tempat" class="form-control" value="<?= $col['tempat'] ?>" />
+                    <input name="tempat" id="tempat" class="form-control" value="<?= $kegiatan['tempat'] ?>" />
                 </div>
                 <h5 class="card-title mt-2">Deskripsi Kegiatan</h5>
-                <textarea id="deskripsi" name="deskripsi"><?= $col['deskripsi'] ?></textarea>
+                <textarea id="deskripsi" name="deskripsi"><?= $kegiatan['deskripsi'] ?></textarea>
             </div>
         </div>
         <button onclick="return submit_posts()" class="btn btn-lg btn-primary btn-block my-1 btn-simpan">Simpan</button>

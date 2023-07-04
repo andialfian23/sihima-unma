@@ -1,10 +1,10 @@
 <?php
-$post = akses('Post');
-if ($post->num_rows() > 0) {
+$akses_post = akses('Post');
+if ($akses_post->num_rows() > 0) {
 ?>
     <a class="btn btn-block btn-lg btn-info mb-2" href="<?= base_url('Post') ?>">Buat Postingan</a>
 <?php }
-if ($tampil->num_rows() > 0) :
+if ($posts->num_rows() > 0) :
 ?>
     <table width="100%" class="table responsive table-striped table-bordered table-hover no-wrap" id="dataTables-sihima">
         <thead>
@@ -13,7 +13,7 @@ if ($tampil->num_rows() > 0) :
                 <th>Judul</th>
                 <th>Kategori</th>
                 <?php
-                if ($post->num_rows() > 0) {
+                if ($akses_post->num_rows() > 0) {
                 ?>
                     <th>Publish</th>
                     <th>Aksi</th>
@@ -26,7 +26,7 @@ if ($tampil->num_rows() > 0) :
         </thead>
         <tbody>
             <?php $no = 1;
-            foreach ($tampil->result_array() as $t) { ?>
+            foreach ($posts->result_array() as $t) { ?>
                 <tr>
                     <td><?= $no ?></td>
                     <td><a target="_blank" href="<?= base_url("HM/post/" . $t['slug']) ?>">
@@ -35,7 +35,7 @@ if ($tampil->num_rows() > 0) :
                     </td>
                     <td><?= $t['nama_kategori'] ?></td>
                     <?php
-                    if ($post->num_rows() > 0) {
+                    if ($akses_post->num_rows() > 0) {
                     ?>
                         <td>
                             <?php if ($t['is_published'] == '1') { ?>

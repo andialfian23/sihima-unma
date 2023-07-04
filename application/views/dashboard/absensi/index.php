@@ -86,7 +86,7 @@
 <!-- DATA ABSENSI -->
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-bordered responsive" width="100%" id="dataTables-sihima">
+        <table class="table table-bordered table-sm responsive" width="100%" id="dataTables-sihima">
             <thead>
                 <tr>
                     <th>
@@ -103,23 +103,23 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($tampil['result'] as $t) : ?>
+                <?php foreach ($absensi['result'] as $row) : ?>
                     <tr>
-                        <td><?= $t['id_peserta'] ?></td>
-                        <td><?= $t['nm_pd'] ?></td>
+                        <td><?= $row['id_peserta'] ?></td>
+                        <td><?= $row['nm_pd'] ?></td>
 
                         <?php if ($sebagai != 'Peserta') : ?>
-                            <td><?= $t['sebagai'] ?></td>
+                            <td><?= $row['sebagai'] ?></td>
                         <?php endif; ?>
 
                         <td>
                             <!-- <a href="#" data-toggle="modal" data-target="#myModal"> -->
-                            <?php if (($t['token_presensi'] != null) && ($t['status'] == 'Hadir')) { ?>
-                                <a href="#" onclick="return cekHadir('<?= $t['nm_pd'] ?>','<?= $t['token_presensi'] ?>')">
-                                    <?= $t['status'] ?>
+                            <?php if (($row['token_presensi'] != null) && ($row['status'] == 'Hadir')) { ?>
+                                <a href="#" onclick="return cekHadir('<?= $row['nm_pd'] ?>','<?= $row['token_presensi'] ?>')">
+                                    <?= $row['status'] ?>
                                 </a>
                             <?php } else {
-                                echo $t['status'];
+                                echo $row['status'];
                             } ?>
                         </td>
                         <?php if (($akses_absensi > 0) && ($kegiatan['id_mj'] == $_SESSION['id_mj'])) { ?>
@@ -127,11 +127,11 @@
                                 <?php
                                 if ($sebagai == 'Panitia') :
                                 ?>
-                                    <a href="<?= base_url("Absen/e_absen/" . $kegiatan['no_kegiatan'] . '/' . $t['id_peserta']) ?>" class="btn btn-sm btn-info mb-1">
+                                    <a href="<?= base_url("Absen/edit/" . $kegiatan['no_kegiatan'] . '/' . $row['id_peserta']) ?>" class="btn btn-sm btn-info mb-1">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 <?php endif; ?>
-                                <a href="<?= base_url("Absen/del_absen/" . $kegiatan['no_kegiatan'] . '/' . $t['id_peserta']) ?>" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Apakah anda yakin akan menghapus data absensi <?= $t['nm_pd']; ?>')">
+                                <a href="<?= base_url("Absen/delete/" . $kegiatan['no_kegiatan'] . '/' . $row['id_peserta']) ?>" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Apakah anda yakin akan menghapus data absensi <?= $row['nm_pd']; ?>')">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </td>
@@ -177,7 +177,7 @@
             });
 
             function cekHadir(namaPeserta, token) {
-                $('#myModal2').modal('show');
+                $('#cekDataHadir').modal('show');
                 var nama = document.querySelector('.modal-title');
                 var preview = document.querySelector('#preview');
                 var pesan = document.querySelector('#message');
@@ -208,7 +208,7 @@
 </div>
 
 
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="cekDataHadir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">

@@ -6,9 +6,8 @@
                 <select id="id_mj" name="id_mj" class="form-control">
                     <option value="<?= $id_mj ?>" hidden><?= $periode ?></option>
                     <?php
-                    $mj = $this->MJ_model->get_masa_jabatan($_SESSION['hima_id']);
-                    foreach ($mj as $h) {
-                        echo '<option value="' . $h['id_mj'] . '"> ' . $h['periode'] . '</option>';
+                    foreach ($masa_jabatans as $mj) {
+                        echo '<option value="' . $mj['id_mj'] . '"> ' . $mj['periode'] . '</option>';
                     }
                     $page = ($_SESSION['role_id'] == '2') ? 'Kprodi/pengurus/' : 'Pengurus/anggota/';
                     ?>
@@ -34,8 +33,8 @@
     </div>
 </div>
 <?php
-if ($tampil['num_rows'] > 0) :
-    ?>
+if ($penguruss['num_rows'] > 0) :
+?>
     <table width="100%" class="table responsive table-striped table-bordered table-hover nowrap" id="dataTables-sihima">
         <thead>
             <tr>
@@ -45,22 +44,21 @@ if ($tampil['num_rows'] > 0) :
             </tr>
         </thead>
         <tbody>
-            <?php $no = 0;
-                foreach ($tampil['result'] as $t) {
-                    ?>
+            <?php
+            foreach ($penguruss['result'] as $row) {
+            ?>
                 <tr>
-                    <td><?= $t['id_mahasiswa_pt'] ?></td>
+                    <td><?= $row['id_mahasiswa_pt'] ?></td>
                     <td>
-                        <a href="<?= base_url('Dashboard/detail/' . $t['id_mahasiswa_pt']) ?>">
-                            <?= $t['nm_pd'] ?>
+                        <a href="<?= base_url('Dashboard/detail/' . $row['id_mahasiswa_pt']) ?>">
+                            <?= $row['nm_pd'] ?>
                         </a>
                     </td>
-                    <td><?= $t['jabatan'] ?> </td>
+                    <td><?= $row['jabatan'] ?> </td>
                 </tr>
             <?php
-                    $no++;
-                }
-                ?>
+            }
+            ?>
         </tbody>
     </table>
     <script type="text/javascript">

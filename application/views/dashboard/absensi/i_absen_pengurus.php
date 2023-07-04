@@ -1,12 +1,12 @@
 <form action="<?= base_url("Absen/proses_absensi") ?>" method="post">
-    <h3><?= $col['nama_kegiatan'] ?></h3>
-    <h5><?= $col['tgl_kegiatan'] ?></h5>
+    <h3><?= $kegiatan['nama_kegiatan'] ?></h3>
+    <h5><?= $kegiatan['tgl_kegiatan'] ?></h5>
 
-    <?php if ($this->absen_model->list_pengurus($col['no_kegiatan'], $_SESSION['id_mj'], 'count') > 0) { ?>
+    <?php if ($this->absen_model->list_pengurus($kegiatan['no_kegiatan'], $_SESSION['id_mj'], 'count') > 0) { ?>
 
         <table class="table table-bordered table-sm mt-2 responsive">
             <tbody>
-                <?php foreach ($tampil as $t) :
+                <?php foreach ($pengurus as $t) :
                 ?>
                     <tr>
                         <td>
@@ -42,7 +42,7 @@
                 <?php endforeach; ?>
                 <tr>
                     <td colspan='3' class="text-center">
-                        <input type="text" name="kegiatan" id="kegiatan" value="<?= $col['no_kegiatan'] ?>" style="display:none" />
+                        <input type="text" name="kegiatan" id="kegiatan" value="<?= $kegiatan['no_kegiatan'] ?>" style="display:none" />
                         <button type="submit" class="btn btn-primary btn-lg btn-block">Simpan</button>
                     </td>
                 </tr>

@@ -18,11 +18,14 @@ class Dokumentasi extends CI_Controller
         $id_mj = $_SESSION['id_mj'];
         $kegiatan = $this->kegiatan_model->get_kegiatan($id_mj, $no_kg);
         if ($kegiatan->num_rows() > 0) {
-            $data['kegiatan'] = $kegiatan->row_array();
-            $data['title'] = 'Dokumentasi Kegiatan';
-            $data['dokumentasi'] = $this->kegiatan_model->get_dokumentasi($id_mj, $no_kg);
-            $data['file']   = 'kegiatan/dokumentasi_kg';
-            $this->load->view('template/index', $data);
+            $kegiatan = $kegiatan->row_array();
+            $dokumentasi = $this->kegiatan_model->get_dokumentasi($id_mj, $no_kg);
+            $this->load->view('dashboard/template/main', [
+                'title'         => 'Dokumentasi Kegiatan',
+                'kegiatan'      => $kegiatan,
+                'dokumentasi'   => $dokumentasi,
+                'file'          => 'dokumentasi/index',
+            ]);
         } else {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
             redirect(base_url("Dashboard/kg_terbaru"));

@@ -1,9 +1,9 @@
 <?php
-$kegiatan = akses('Kegiatan')->num_rows();
-if ($kegiatan > 0) : ?>
+$akses_kg = akses('Kegiatan')->num_rows();
+if ($akses_kg > 0) : ?>
     <a class="btn btn-block btn-lg btn-info mb-2" href="<?= base_url('Kegiatan/i_kg') ?>">Tambah Kegiatan</a>
 <?php endif;
-if ($tampil->num_rows() < 1) {
+if ($kegiatan->num_rows() < 1) {
     echo "<h4 class='text-center'>Belum ada kegiatan Terbaru</h4>";
 } else {
 ?>
@@ -19,34 +19,31 @@ if ($tampil->num_rows() < 1) {
         </thead>
         <tbody>
             <?php $i = 1;
-            date_default_timezone_set('Asia/jakarta');
             $date = date('Y-m-d');
-            foreach ($tampil->result_array() as $t) :
-                $lingkup =  $t['lingkup'];
-                $kode_prodi =  $t['kode_prodi'];
-                $kode_fak =  $t['kode_fak'];
+            foreach ($kegiatan->result_array() as $t) :
+                $lingkup =  $row['lingkup'];
+                $kode_prodi =  $row['kode_prodi'];
+                $kode_fak =  $row['kode_fak'];
                 if (($lingkup == 'Umum') ||
-                    (($lingkup == 'Fakultas') && ($kode_fak == session_gan('kode_fak'))) ||
-                    (($lingkup == 'Program Studi') && ($kode_prodi == session_gan('kode_prodi'))) ||
-                    (($lingkup == 'Pengurus') && (session_gan('role_id') < 7))
+                    (($lingkup == 'Fakultas') && ($kode_fak == $_SESSION['kode_fak'])) ||
+                    (($lingkup == 'Program Studi') && ($kode_prodi == $_SESSION['kode_prodi'])) ||
+                    (($lingkup == 'Pengurus') && ($_SESSION['role_id'] < 7))
                 ) :
             ?>
                     <tr>
-                        <td><?= date_id($t['tgl_kegiatan']) ?></td>
+                        <td><?= date_id($row['tgl_kegiatan']) ?></td>
                         <td>
-                            <a href="<?= base_url('Dashboard/info_kegiatan/' . $t['no_kegiatan']) ?>">
-                                <?= $t['nama_kegiatan'] ?>
+                            <a href="<?= base_url('Dashboard/info_kegiatan/' . $row['no_kegiatan']) ?>">
+                                <?= $row['nama_kegiatan'] ?>
                             </a>
                         </td>
-                        <td><?= $t['singkatan'] ?></td>
+                        <td><?= $row['singkatan'] ?></td>
                         <td><?= $lingkup ?></td>
                         <td>
-                            <?php
-                            if ($t['tgl_kegiatan'] == $date) {
-                                echo '<b class="text-success">Sedang Berlangsung</b>';
-                            } else {
-                                echo 'Belum Terlaksana';
-                            }
+                            <?=
+                            ($row['tgl_kegiatan'] == $date)
+                                ? '<b class="text-success">Sedang Berlangsung</b>'
+                                : 'Belum Terlaksana';
                             ?>
                         </td>
                     </tr>

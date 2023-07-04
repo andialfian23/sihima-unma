@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="-md-6">
         <div class="form-group row">
             <label class="col-md-4 col-form-label" for="sebagai">Pilih Kamera</label>
             <select class="form-control col-md-8" id="sebagai"></select>
@@ -28,23 +28,19 @@
                 <?php
                 $no_kg = $this->uri->segment('3');
                 $no = 1;
-                foreach ($tampil['result'] as $t) :
-                    ?>
+                foreach ($absensi['result'] as $row) :
+                ?>
                     <tr>
                         <td><?= $no ?></td>
-                        <td><?= $t['id_peserta'] ?></td>
-                        <td><?= $t['nm_pd'] ?></td>
-                        <td><?= $t['keterangan'] ?></td>
+                        <td><?= $row['id_peserta'] ?></td>
+                        <td><?= $row['nm_pd'] ?></td>
+                        <td><?= $row['keterangan'] ?></td>
                         <td>
                             <?php
-                                $id_peserta = substr($t['id_peserta'], 0, 2);
-                                if ($id_peserta != 'PS') {
-                                    $jns = 'mhs_unma';
-                                } else {
-                                    $jns = 'non_unma';
-                                }
-                                ?>
-                            <a href="<?= base_url("Absen/del_absen/" . $no_kg . '/' . $t['id_absen']) ?>" onclick="return confirm('Apakah anda yakin ingin menghapus <?= $t['nm_pd'] ?> ?')" class="btn btn-danger btn-sm mt-1">
+                            $id_peserta = substr($row['id_peserta'], 0, 2);
+                            $jns = ($id_peserta != 'PS') ? 'mhs_unma' : 'non_unma';
+                            ?>
+                            <a href="<?= base_url("Absen/delete/" . $no_kg . '/' . $row['id_absen']) ?>" onclick="return confirm('Apakah anda yakin ingin menghapus <?= $row['nm_pd'] ?> ?')" class="btn btn-danger btn-sm mt-1">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

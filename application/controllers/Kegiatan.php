@@ -18,19 +18,23 @@ class Kegiatan extends CI_Controller
     // SHOW DATA KEGIATAN di MASA JABATAN sekarang
     public function sekarang()
     {
-        $data['title']      = 'Kegiatan ' . $_SESSION['singkatan'] . ' ' . $_SESSION['per_jabatan'];
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->kegiatan_model->get_kegiatan($_SESSION['id_mj']);
-        $data['file']       = 'kegiatan/index';
-        $this->load->view('template/index', $data);
+        $title = 'Kegiatan ' . $_SESSION['singkatan'] . ' ' . $_SESSION['per_jabatan'];
+        $kegiatan = $this->kegiatan_model->get_kegiatan($_SESSION['id_mj']);
+        $this->load->view('dashboard/template/main', [
+            'title'      => $title,
+            'kegiatan'   => $kegiatan,
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'file'       => 'kegiatan/index',
+        ]);
     }
     // INPUT KEGIATAN
     public function i_kg()
     {
-        $data['title']  = 'Tambah Kegiatan';
-        $data['file']   = 'kegiatan/i_kg';
-        $this->load->view('template/index', $data);
+        $this->load->view('template/index', [
+            'title' => 'Tambah Kegiatan',
+            'file'  => 'kegiatan/create',
+        ]);
     }
     public function p_i_kg()
     {
@@ -43,7 +47,7 @@ class Kegiatan extends CI_Controller
         } else {
             $mulaiAbsen = post_gan('mulaiAbsen');
             $selesaiAbsen = post_gan('selesaiAbsen');
-            $data = [
+            $data_values = [
                 'nama_kegiatan'     => post_gan('nama_kegiatan'),
                 'tgl_kegiatan'      => $tgl,
                 'tempat'            => post_gan('tempat'),
@@ -56,7 +60,7 @@ class Kegiatan extends CI_Controller
                 'deskripsi'         => post_gan('deskripsi'),
                 'id_mj'             => $_SESSION['id_mj']
             ];
-            $this->mydb->input_dt($data, 't_kegiatan');
+            $this->mydb->input_dt($data_values, 't_kegiatan');
             echo 'Berhasil menambahkan data kegiatan';
         }
     }
@@ -68,11 +72,14 @@ class Kegiatan extends CI_Controller
             redirect(base_url("Kegiatan/sekarang"));
         }
         $kegiatan = $this->kegiatan_model->get_kegiatan($_SESSION['id_mj'], $no_kg);
-        if (($kegiatan->num_rows() > 0) || ($no_kg != null)) {
-            $data['col']    = $kegiatan->row_array();
-            $data['title']  = 'Edit Kegiatan';
-            $data['file']   = 'kegiatan/e_kg';
-            $this->load->view('template/index', $data);
+        if ($kegiatan->num_rows() > 0) {
+            $kegiatan    = $kegiatan->row_array();
+
+            $this->load->view('dashboard/template/main', [
+                'title'     => 'Edit Kegiatan',
+                'kegiatan'  => $kegiatan,
+                'file'      => 'kegiatan/edit',
+            ]);
         } else {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
             redirect(base_url("Dashboard/kg_terbaru"));
@@ -91,20 +98,20 @@ class Kegiatan extends CI_Controller
             $tgl = substr($mulai, 0, 10);
             $mulaiAbsen = post_gan('mulaiAbsen');
             $selesaiAbsen = post_gan('selesaiAbsen');
-            $data = [
+            $data_values = [
                 'nama_kegiatan' => post_gan('nama_kegiatan'),
-                'tgl_kegiatan' => $tgl,
-                'tempat' => post_gan('tempat'),
+                'tgl_kegiatan'  => $tgl,
+                'tempat'        => post_gan('tempat'),
                 'sifat_kegiatan' => post_gan('sifat'),
-                'lingkup' => post_gan('lingkup'),
-                'mulai' => $mulai,
-                'selesai' => post_gan('selesai'),
+                'lingkup'       => post_gan('lingkup'),
+                'mulai'         => $mulai,
+                'selesai'       => post_gan('selesai'),
                 'mulai_absensi' => $mulaiAbsen,
                 'selesai_absensi' => $selesaiAbsen,
-                'deskripsi' => post_gan('deskripsi')
+                'deskripsi'      => post_gan('deskripsi')
             ];
             $where = ['no_kegiatan' => $no_kg, 'id_mj' => $id_mj];
-            $this->mydb->update_dt($where, $data, 't_kegiatan');
+            $this->mydb->update_dt($where, $data_values, 't_kegiatan');
             echo 'Berhasil menambahkan data kegiatan';
         } else {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
@@ -112,7 +119,7 @@ class Kegiatan extends CI_Controller
         }
     }
     //HAPUS
-    function del_kg($no_kg = null)
+    function delete($no_kg = null)
     {
         if ($no_kg == null) {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
@@ -140,6 +147,7 @@ class Kegiatan extends CI_Controller
         $this->session->set_flashdata('toastr', '<script>toastr.' . $notif . ';</script>');
         redirect(base_url("Kegiatan/sekarang"));
     }
+
     //PROSES UPLOAD HALAMAN PENGESAHAN KEGIATAN
     public function add_pengesahan($no_kg = null)
     {
@@ -155,8 +163,8 @@ class Kegiatan extends CI_Controller
             } else {
                 $nama_file = $proses_upload['file_name'];
                 $where = array('no_kegiatan' => $no_kg);
-                $data = ['pengesahan' => $nama_file];
-                $this->mydb->update_dt($where, $data, 't_kegiatan');
+                $set = ['pengesahan' => $nama_file];
+                $this->mydb->update_dt($where, $set, 't_kegiatan');
                 $response = 1;
             }
         } else {

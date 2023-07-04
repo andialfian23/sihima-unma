@@ -77,6 +77,7 @@ class Kprodi extends CI_Controller
             $periode = $_SESSION['per_jabatan'];
         }
         $kahim     = $this->MJ_model->kahim($id_mj);
+        $masa_jabatans = $this->MJ_model->get_masa_jabatan($_SESSION['hima_id']);
         $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
         $this->load->view('dashboard/template/main', [
             'title'      => 'Anggota Pengurus ' . $periode,
@@ -84,6 +85,7 @@ class Kprodi extends CI_Controller
             'periode'    => $periode,
             'kahim'      => $kahim,
             'tampil'     => $penguruss,
+            'masa_jabatans' => $masa_jabatans,
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
             'file'       => 'pengurus/index',
@@ -101,19 +103,23 @@ class Kprodi extends CI_Controller
     }
     public function kegiatan($segment_id_mj = null)
     {
-        $id_mj       = (!empty($segment_id_mj)) ? $segment_id_mj : $_SESSION['id_mj'];
-        $mj                 = $this->MJ_model->get_masa_periode($id_mj)->row_array();
-        $data['id_mj']      = $mj['id_mj'];
-        $data['kahim']      = $this->MJ_model->kahim($id_mj);
-        $data['periode']    = (!empty($segment_id_mj)) ? $mj['periode'] : $_SESSION['per_jabatan'];
+        $id_mj          = (!empty($segment_id_mj)) ? $segment_id_mj : $_SESSION['id_mj'];
+        $mj             = $this->MJ_model->get_masa_periode($id_mj)->row_array();
+        $periode        = (!empty($segment_id_mj)) ? $mj['periode'] : $_SESSION['per_jabatan'];
+        $masa_jabatan   = $this->MJ_model->kahim($id_mj);
+        $kegiatan       = $this->kegiatan_model->get_kegiatan($mj['id_mj']);
 
-        $data['title']      = 'Kegiatan ' . $_SESSION['singkatan'] . ' ' . $data['periode'];
-        $data['link']       = 'Kprodi/kegiatan';
-        $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-        $data['assets_js']  = array("themes/vendors/js/tables/datatable/datatables.min.js");
-        $data['tampil']     = $this->kegiatan_model->get_kegiatan($mj['id_mj']);
-        $data['file']       = 'kegiatan/index2';
-        $this->load->view('template/index', $data);
+        $this->load->view('dashboard/template/main', [
+            'title'      => 'Kegiatan ' . $_SESSION['singkatan'] . ' ' . $periode,
+            'id_mj'      => $mj['id_mj'],
+            'kahim'      => $masa_jabatan,
+            'periode'    => $periode,
+            'link'       => 'Kprodi/kegiatan',
+            'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+            'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+            'kegiatan'   => $kegiatan,
+            'file'       => 'kegiatan/index2',
+        ]);
     }
     public function postingan()
     {
@@ -122,7 +128,7 @@ class Kprodi extends CI_Controller
             'title'      => 'Postingan Pengurus',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
-            'tampil'     => $posts,
+            'posts'      => $posts,
             'file'       => 'post/index',
         ]);
     }

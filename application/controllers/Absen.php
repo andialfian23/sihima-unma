@@ -16,11 +16,14 @@ class Absen extends CI_Controller
     {
         $kegiatan = $this->kegiatan_model->get_kegiatan($_SESSION['id_mj'], $no_kg);
         if ($kegiatan->num_rows() > 0 || $no_kg != null) {
-            $data['col']    = $kegiatan->row_array();
-            $data['title']  = 'Proses Absensi Pengurus';
-            $data['tampil'] = $this->absen_model->list_pengurus($no_kg, $_SESSION['id_mj']);
-            $data['file']   = 'kegiatan/i_absen_pengurus';
-            $this->load->view('template/index', $data);
+            $kegiatan   = $kegiatan->row_array();
+            $pengurus    = $this->absen_model->list_pengurus($no_kg, $_SESSION['id_mj']);
+            $this->load->view('dashboard/template/main', [
+                'title'     => 'Proses Absensi Pengurus',
+                'kegiatan'  => $kegiatan,
+                'pengurus'  => $pengurus,
+                'file'      => 'absensi/i_absen_pengurus',
+            ]);
         } else {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
             redirect(base_url("Kegiatan"));
@@ -40,15 +43,15 @@ class Absen extends CI_Controller
             $ttl = count($mhs);
 
             for ($i = 0; $i < $ttl; $i++) {
-                $data = array(
+                $data_values = array(
                     'no_kegiatan' => $no_kg,
-                    'mhs_unma' => '1',
-                    'no_id' => $mhs[$i],
-                    'status' => $status[$i],
-                    'sebagai' => $sebagai[$i]
+                    'mhs_unma'  => '1',
+                    'no_id'     => $mhs[$i],
+                    'status'    => $status[$i],
+                    'sebagai'   => $sebagai[$i]
                 );
-                // var_dump($data);
-                $this->mydb->input_dt($data, 't_absen');
+                // var_dump($data_values);
+                $this->mydb->input_dt($data_values, 't_absen');
             }
             notifikasi('Proses Absensi Berhasil !!!', true);
             redirect(base_url('Dashboard/absensi/' . $no_kg));
@@ -97,19 +100,15 @@ class Absen extends CI_Controller
             $this->session->set_flashdata('toastr', '<script>toastr.error("Presensi manual Gagal!!!");</script>');
             redirect(base_url("Dashboard"));
         }
-        if ($id_peserta == 'PS') {
-            $mhs = '0';
-        } else {
-            $mhs = '1';
-        }
-        $data = array(
+        $mhs =  ($id_peserta == 'PS') ? '0' : '1';
+        $data_values = array(
             'no_kegiatan' => post_gan('no_kg'),
             'mhs_unma' => $mhs,
             'no_id'   => post_gan('no_id'),
             'status'  => 'Hadir',
             'sebagai' => post_gan('sebagai')
         );
-        $this->mydb->input_dt($data, 't_absen');
+        $this->mydb->input_dt($data_values, 't_absen');
         $this->session->set_flashdata('toastr', '<script>toastr.success("Presensi manual berhasil :)");</script>');
         redirect(base_url("Dashboard/absensi/" . post_gan('no_kg')));
     }
@@ -120,17 +119,19 @@ class Absen extends CI_Controller
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
             redirect(base_url('Dashboard'));
         }
-        $id_mj = $_SESSION['id_mj'];
-        $kegiatan = $this->kegiatan_model->get_kegiatan($id_mj, $no_kg);
+        $kegiatan = $this->kegiatan_model->get_kegiatan($_SESSION['id_mj'], $no_kg);
         if ($kegiatan->num_rows() > 0) {
-            $data['col'] = $kegiatan->row_array();
-            $data['title'] = 'Kegiatan : ' . $data['col']['nama_kegiatan'];
-            $data['assets_css'] = array("themes/vendors/css/tables/datatable/datatables.min.css");
-            $data['assets_js'] = array("themes/vendors/js/tables/datatable/datatables.min.js");
-            $data['tampil'] =  $this->absen_model->getAbsen($no_kg, 'Peserta');
-            $data['sebagai'] = $sebagai;
-            $data['file']   = 'kegiatan/scan';
-            $this->load->view('template/index', $data);
+            $nama_kegiatan = $kegiatan->row_array();
+            $title = 'Kegiatan : ' . $nama_kegiatan;
+            $absensi = $this->absen_model->getAbsen($no_kg, 'Peserta');
+            $this->load->view('dashboard/template/main', [
+                'title'     => $title,
+                'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
+                'assets_js' => array("themes/vendors/js/tables/datatable/datatables.min.js"),
+                'absensi'    =>  $absensi,
+                'sebagai'   => $sebagai,
+                'file'      => 'absensi/scan',
+            ]);
         } else {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
             redirect(base_url("Kegiatan"));
@@ -199,7 +200,7 @@ class Absen extends CI_Controller
         }
     }
     //UPDATE
-    public function e_absen($no_kg = null, $npm = null)
+    public function edit($no_kg = null, $npm = null)
     {
         if (($no_kg == null) || ($npm == null)) {
             notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
@@ -213,11 +214,14 @@ class Absen extends CI_Controller
         $this->form_validation->set_rules('status', 'Status', 'trim');
         $this->form_validation->set_rules('sebagai', 'Sebagai', 'trim');
         if ($this->form_validation->run() == false) {
-            $data['title'] = 'Edit Absensi';
-            $data['col'] = $absen->row_array();
-            $data['nama'] = json_npm($npm)['nm_pd'];
-            $data['file']   = 'kegiatan/e_absen';
-            $this->load->view('template/index', $data);
+            $absensi = $absen->row_array();
+            $nama    = json_npm($npm)['nm_pd'];
+            $this->load->view('dashboard/template/main', [
+                'title'     => 'Edit Absensi',
+                'absensi'   => $absensi,
+                'nama'      => $nama,
+                'file'      => 'absensi/edit',
+            ]);
         } else {
             $set = [
                 'status' => post_gan('status'),
@@ -230,7 +234,7 @@ class Absen extends CI_Controller
         }
     }
     //DELETE
-    function del_absen($no_kegiatan = null, $id_absen = null)
+    function delete($no_kegiatan = null, $id_absen = null)
     {
         //id_absen == no_id in database
         if (($no_kegiatan != null) && ($id_absen != null)) {

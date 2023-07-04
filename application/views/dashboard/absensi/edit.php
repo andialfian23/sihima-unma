@@ -1,24 +1,24 @@
 <div class="row">
     <div class="col-md-12">
 
-        <form action="<?= base_url('Absen/e_absen/' . $col['no_kegiatan'] . '/' . $col['id_mahasiswa_pt']) ?>" method="post">
+        <form action="<?= base_url('Absen/e_absen/' . $absensi['no_kegiatan'] . '/' . $absensi['id_mahasiswa_pt']) ?>" method="post">
             <div class="form-group row">
                 <div class="col-md-3">Nama Kegiatan</div>
                 <div class="col-md-9">
-                    <b><?= $col['nama_kegiatan'] ?></b>
+                    <b><?= $absensi['nama_kegiatan'] ?></b>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-md-3">Tanggal Kegiatan</div>
                 <div class="col-md-6">
-                    <b><?= date_id($col['tgl_kegiatan']) ?></b>
+                    <b><?= date_id($absensi['tgl_kegiatan']) ?></b>
                 </div>
             </div>
             <hr>
             <div class="form-group row">
                 <div class="col-md-3">NPM</div>
                 <div class="col-md-9">
-                    <b> <?= $col['id_mahasiswa_pt'] ?></b>
+                    <b> <?= $absensi['id_mahasiswa_pt'] ?></b>
                 </div>
             </div>
             <div class="form-group row">
@@ -32,7 +32,7 @@
                 <div class="col-md-6">
                     <div class="input-group">
                         <select name="sebagai" id="sebagai" class="form-control">
-                            <option value="<?= $col['sebagai'] ?>" hidden><?= $col['sebagai'] ?></option>
+                            <option value="<?= $absensi['sebagai'] ?>" hidden><?= $absensi['sebagai'] ?></option>
                             <option value="Panitia">Panitia</option>
                             <option value="Penanggung Jawab">Penanggung Jawab</option>
                             <option value="Ketua Pelaksana">Ketua Pelaksana</option>
@@ -55,7 +55,7 @@
                 <div class="col-md-6">
                     <div class="input-group">
                         <select name="status" id="status" class="form-control">
-                            <option value="<?= $col['status'] ?>" hidden><?= $col['status'] ?></option>
+                            <option value="<?= $absensi['status'] ?>" hidden><?= $absensi['status'] ?></option>
                             <option value="Hadir">Hadir</option>
                             <option value="Sakit">Sakit</option>
                             <option value="Izin">Izin</option>

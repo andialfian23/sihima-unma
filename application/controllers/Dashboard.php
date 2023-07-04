@@ -26,14 +26,15 @@ class Dashboard extends CI_Controller
 	public function kegiatan()
 	{
 		akses_prodi();
-
+		$histori_kegiatan = $this->kegiatan->kegiatanku($_SESSION['id_mahasiswa_pt']);
+		$nama_kahim = $this->MJ_model->get_mj_aktif($_SESSION['hima_id'])['ketua_himpunan'];
 		$this->load->view('dashboard/template/main', [
-			'tampil' 	 => $this->kegiatan->kegiatanku($_SESSION['id_mahasiswa_pt']),
-			'kahim' 	 => $this->MJ_model->get_mj_aktif($_SESSION['hima_id'])['ketua_himpunan'],
+			'kegiatans'  => $histori_kegiatan,
+			'kahim' 	 => $nama_kahim,
 			'title'		 => 'Histori Kegiatan',
 			'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
 			'assets_js'	 => array("themes/vendors/js/tables/datatable/datatables.min.js"),
-			'file' 		 => 'kegiatanku',
+			'file' 		 => 'histori_kegiatan',
 		]);
 	}
 	public function info_kegiatan($no_kg = null)
@@ -47,10 +48,10 @@ class Dashboard extends CI_Controller
 		if ($kegiatan->num_rows() > 0) {
 			$kegiatan = $kegiatan->row_array();
 
-			$this->load->view('template/index', [
+			$this->load->view('dashboard/template/main', [
 				'kegiatan'  => $kegiatan,
 				'title'	    => $kegiatan['nama_kegiatan'],
-				'file'		=> 'kegiatan/info_kegiatan',
+				'file'		=> 'kegiatan/detail',
 			]);
 		} else {
 			notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
@@ -92,15 +93,15 @@ class Dashboard extends CI_Controller
 				$title	= 'Daftar Peserta';
 			}
 
-			$this->load->view('template/index', [
+			$this->load->view('dashboard/template/main', [
 				'total_peserta' => $total_peserta,
 				'kegiatan' 	=> $kegiatan->row_array(),
 				'sebagai'  	=> $sebagai,
-				'tampil'   	=> $query,
+				'absensi'   => $query,
 				'title'		=> $title,
 				'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
 				'asset_js' 	=> array("themes/vendors/js/tables/datatable/datatables.min.js"),
-				'file' 		=> 'kegiatan/absensi_kg',
+				'file' 		=> 'absensi/index',
 			]);
 		} else {
 			notifikasi('Data Kegiatan Tidak Ditemukan!!', false);
@@ -128,11 +129,12 @@ class Dashboard extends CI_Controller
 	//KEGIATAN TERBARU
 	public function kg_terbaru()
 	{
+		$kegiatan = $this->kegiatan->kegiatan_baru();
 		$this->load->view('dashboard/template/main', [
 			'title'		=> 'Kegiatan Terbaru',
 			'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
 			'assets_js'	=> array("themes/vendors/js/tables/datatable/datatables.min.js"),
-			'tampil' 	=> $this->kegiatan->kegiatan_baru(),
+			'kegiatan' 	=> $kegiatan,
 			'file' 		=> 'kegiatan_baru',
 		]);
 	}
