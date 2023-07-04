@@ -1,6 +1,6 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
-<?php $this->load->view('laporan/header') ?>
+<?php $this->load->view('laporan/template/header') ?>
 
 <div style="text-align:center;">
     <h2>DOKUMENTASI KEGIATAN</h2>
@@ -25,4 +25,4 @@
 </div>
 
 
-<?php $this->load->view('laporan/footer') ?>
+<?php $this->load->view('laporan/template/footer') ?>

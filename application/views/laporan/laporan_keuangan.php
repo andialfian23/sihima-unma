@@ -1,4 +1,4 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
 <div class="header-laporan">
     <table width="100%" class="header">
@@ -141,4 +141,4 @@ if ($pemasukan['num_rows'] > 0) {
     </b>
 </div>
 
-<?php $this->load->view('laporan/footer') ?>
+<?php $this->load->view('laporan/template/footer') ?>

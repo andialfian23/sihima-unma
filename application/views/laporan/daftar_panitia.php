@@ -1,6 +1,6 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
-<?php $this->load->view('laporan/header') ?>
+<?php $this->load->view('laporan/template/header') ?>
 
 <div style="text-align:center;">
     <h2>
@@ -81,4 +81,4 @@ if ($jml_panitia > 0) :
 else :
     echo '<h4>Belum ada data panitia!!!</h4>';
 endif;
-$this->load->view('laporan/footer') ?>
+$this->load->view('laporan/template/footer') ?>

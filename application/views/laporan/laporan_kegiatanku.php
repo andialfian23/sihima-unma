@@ -60,8 +60,8 @@
 
 <body>
     <h4>DAFTAR KEGIATAN HIMPUNAN YANG DIIKUTI</h4>
-    <h4><?= session_gan('nama_fak') ?></h4>
-    <h4><?= session_gan('nama_prodi') ?></h4>
+    <h4><?= $_SESSION['nama_fak'] ?></h4>
+    <h4><?= $_SESSION['nama_prodi'] ?></h4>
     <br>
     <table border="0">
         <tr>
@@ -69,7 +69,7 @@
                 NPM
             </td>
             <td>
-                : <?= session_gan('id_mahasiswa_pt') ?>
+                : <?= $_SESSION['id_mahasiswa_pt'] ?>
             </td>
         </tr>
         <tr>
@@ -77,7 +77,7 @@
                 Nama Lengkap
             </td>
             <td>
-                : <?= session_gan('nama') ?>
+                : <?= $_SESSION['nama'] ?>
             </td>
         </tr>
         <tr>
@@ -85,7 +85,7 @@
                 Program Studi
             </td>
             <td>
-                : <?= session_gan('nama_prodi') ?>
+                : <?= $_SESSION['nama_prodi'] ?>
             </td>
         </tr>
     </table>

@@ -1,6 +1,6 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
-<?php $this->load->view('laporan/header') ?>
+<?php $this->load->view('laporan/template/header') ?>
 <p><?= $col['deskripsi']; ?></p>
 
 <div>
@@ -23,10 +23,10 @@
     <div>
         <strong>
             <?php
-                $jml_panitia = $panitia['num_rows'];
-                $cek_jml_panitia = $this->absen->cek_sebagai($col['no_kegiatan'], 'Panitia');
-                echo ($cek_jml_panitia == $jml_panitia) ? 'DAFTAR PANITIA' : 'SUSUSAN PANITIA';
-                ?>
+            $jml_panitia = $panitia['num_rows'];
+            $cek_jml_panitia = $this->absen->cek_sebagai($col['no_kegiatan'], 'Panitia');
+            echo ($cek_jml_panitia == $jml_panitia) ? 'DAFTAR PANITIA' : 'SUSUSAN PANITIA';
+            ?>
         </strong></br>
     </div>
     <br>
@@ -42,7 +42,7 @@ if ($tampil['num_rows'] > 0) : ?>
 endif;
 
 if ($biaya['num_rows'] > 0) :
-    ?>
+?>
     <div>
         <strong>REALISASI BIAYA</strong></br>
     </div>
@@ -53,7 +53,7 @@ if ($biaya['num_rows'] > 0) :
 endif;
 if ($dokumentasi['num_rows'] > 0) :
 
-    ?>
+?>
     <div>
         <strong>DOKUMENTASI KEGIATAN</strong></br>
     </div>
@@ -62,4 +62,4 @@ if ($dokumentasi['num_rows'] > 0) :
 
 <?php endif; ?>
 
-<?php $this->load->view('laporan/footer'); ?>
+<?php $this->load->view('laporan/template/footer'); ?>

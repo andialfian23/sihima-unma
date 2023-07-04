@@ -1,6 +1,6 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
-<?php $this->load->view('laporan/header') ?>
+<?php $this->load->view('laporan/template/header') ?>
 
 <div style="text-align:center;">
     <h2>REALISASI BIAYA KEGIATAN</h2>
@@ -102,7 +102,7 @@ if ($biaya['jml_data_pengeluaran'] > 0) {
             Jadi dana yang dipakai untuk Kegiatan <?= $biaya['nama_kegiatan'] ?> adalah Rp <?= number_format($jumlah); ?><br>
 
         <?php
-            echo 'Sumber Dana : KAS ' . session_gan('singkatan') . ' ' . session_gan('per_jabatan');
+            echo 'Sumber Dana : KAS ' . $_SESSION['singkatan'] . ' ' . $_SESSION['per_jabatan'];
         } else {
             if ($biaya['jml_data_pengeluaran'] > 0) {
                 echo "= PEMASUKAN - PENGELUARAN <br><br>";
@@ -112,4 +112,4 @@ if ($biaya['jml_data_pengeluaran'] > 0) {
         } ?>
     </b>
 </div>
-<?php $this->load->view('laporan/footer') ?>
+<?php $this->load->view('laporan/template/footer') ?>

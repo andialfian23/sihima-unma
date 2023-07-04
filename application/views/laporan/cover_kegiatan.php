@@ -1,4 +1,4 @@
-<?php $this->load->view('laporan/head') ?>
+<?php $this->load->view('laporan/template/head') ?>
 
 <div style="text-align:center">
     <h2> LAPORAN KEGIATAN</h2>
@@ -13,4 +13,4 @@
     <h2><?= substr($col['mulai'], 0, 4); ?></h2>
 </div>
 
-<?php $this->load->view('laporan/footer') ?>
+<?php $this->load->view('laporan/template/footer') ?>
