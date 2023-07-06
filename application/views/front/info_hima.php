@@ -13,7 +13,7 @@
                 <div class="row">
 
                     <div class="col-two tab-full text-center">
-                        <img src="<?= base_url('images/logo/' . $col['logo']) ?>" alt="" width="150px">
+                        <img src="<?= base_url('images/logo/' . $hima['logo']) ?>" alt="" width="150px">
                     </div>
 
                     <div class="col-five tab-full">
@@ -21,23 +21,23 @@
                             <tbody>
                                 <tr>
                                     <td>Singkatan</td>
-                                    <th><?= $col['singkatan'] ?></th>
+                                    <th><?= $hima['singkatan'] ?></th>
                                 </tr>
                                 <tr>
                                     <td>Nama Himpunan</td>
-                                    <th><?= $col['nama_hima'] ?></th>
+                                    <th><?= $hima['nama_hima'] ?></th>
                                 </tr>
                                 <tr>
                                     <td>Periode Sekarang</td>
-                                    <th><?= $col['periode'] ?></th>
+                                    <th><?= $hima['periode'] ?></th>
                                 </tr>
                                 <tr>
                                     <td>Ketua Himpunan</td>
-                                    <th><?= $col['ketua_himpunan'] ?></th>
+                                    <th><?= $hima['ketua_himpunan'] ?></th>
                                 </tr>
                                 <tr>
                                     <td>Jumlah Pengurus</td>
-                                    <th><?= $col['jml_pengurus'] ?></th>
+                                    <th><?= $hima['jml_pengurus'] ?></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -46,14 +46,14 @@
                         <table class="table table-sm table-borderless" width="100%">
                             <tr>
                                 <td width="50%">Sekretariat</td>
-                                <th><?= $col['tempat_sekre'] ?></th>
+                                <th><?= $hima['tempat_sekre'] ?></th>
                             </tr>
                             <tr>
                                 <td width="50%">Contact Person</td>
                                 <th>
                                     <?php
-                                    if ($col['contact_person'] != 'Belum Ditambahkan') :
-                                        foreach ($col['contact_person'] as $cp) {
+                                    if ($hima['contact_person'] != 'Belum Ditambahkan') :
+                                        foreach ($hima['contact_person'] as $cp) {
                                             echo $cp['no_telp'] . ' (' . $cp['nama'] . ') <br>';
                                         }
                                     endif;
@@ -70,7 +70,7 @@
                         <tbody>
                             <tr>
                                 <td>Ketua Himpunan</td>
-                                <td>: <?= $col['ketua_himpunan'] ?></td>
+                                <td>: <?= $hima['ketua_himpunan'] ?></td>
                             </tr>
                             <?php foreach ($anggota['result'] as $t) :
                                 if ($t['jabatan'] != 'Ketua Himpunan') :

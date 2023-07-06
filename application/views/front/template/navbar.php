@@ -50,7 +50,7 @@
                 <a href="<?= base_url("HM/himpunan") ?>">Himpunan Mahasiswa</a>
             </li>
             <li>
-                <a href="<?= base_url("HM/register") ?>">Registrasi</a>
+                <a href="<?= base_url("Register") ?>">Registrasi</a>
             </li>
             <li>
                 <?php if (!empty($_SESSION['nama'])) {

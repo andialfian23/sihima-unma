@@ -3,7 +3,7 @@
 <html class="loading" lang="en" data-textdirection="ltr">
 
 <head>
-    <?php $this->load->view('template/head') ?>
+    <?php $this->load->view('dashboard/template/head') ?>
 </head>
 
 <body class="vertical-layout ">

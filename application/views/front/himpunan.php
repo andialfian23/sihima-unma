@@ -8,22 +8,22 @@
         <div class="row entries-wrap wide">
             <div class="entries">
 
-                <?php foreach ($tampil as $t) { ?>
+                <?php foreach ($tampil as $hima) { ?>
 
                     <article class="col-block">
                         <div class="item-entry" data-aos="zoom-in">
                             <div class="item-entry__thumb imgLogo">
-                                <a href="<?= base_url("HM/info_hima/" . $t['singkatan']) ?>" class="item-entry__thumb-link">
-                                    <img src="<?= base_url("images/logo/" . $t['logo']) ?>" alt="" class="hima">
+                                <a href="<?= base_url("HM/info_hima/" . $hima['singkatan']) ?>" class="item-entry__thumb-link">
+                                    <img src="<?= base_url("images/logo/" . $hima['logo']) ?>" alt="" class="hima">
                                 </a>
                             </div>
                             <div class="item-entry__text mt-1">
                                 <h2 class="item-entry__title">
-                                    <a href="<?= base_url("HM/info_hima/" . $t['singkatan']) ?>"><?= $t['singkatan'] ?></a>
+                                    <a href="<?= base_url("HM/info_hima/" . $hima['singkatan']) ?>"><?= $hima['singkatan'] ?></a>
                                 </h2>
 
                                 <div class="item-entry__cat">
-                                    <a href="<?= base_url("HM/info_hima/" . $t['singkatan']) ?>"><?= $t['nama_hima'] ?></a>
+                                    <a href="<?= base_url("HM/info_hima/" . $hima['singkatan']) ?>"><?= $hima['nama_hima'] ?></a>
                                 </div>
                             </div>
                         </div>

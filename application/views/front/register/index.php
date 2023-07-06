@@ -7,7 +7,7 @@
 
     </div>
 
-    <form action="<?= base_url('HM/register') ?>" method="POST">
+    <form action="<?= base_url('Register') ?>" method="POST">
         <div class="row">
             <div class="col-five tab-full">
 
@@ -103,15 +103,15 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($kegiatan->result_array() as $t) :
-                                            if ($t['mulai'] != null) :
-                                                $mulai = $t['mulai'];
-                                                $selesai = $t['selesai'];
-                                                $pelaksanaan = waktu_pelaksanaan($mulai, $selesai);
-                                                $waktu = $pelaksanaan['tanggal'];
-                                            else :
-                                                $waktu = $t['tgl_kegiatan'];
-                                            endif;
-                                            ?>
+                                        if ($t['mulai'] != null) :
+                                            $mulai = $t['mulai'];
+                                            $selesai = $t['selesai'];
+                                            $pelaksanaan = waktu_pelaksanaan($mulai, $selesai);
+                                            $waktu = $pelaksanaan['tanggal'];
+                                        else :
+                                            $waktu = $t['tgl_kegiatan'];
+                                        endif;
+                                    ?>
                                         <tr>
                                             <td class="text-center">
                                                 <input type="checkbox" class="listCheckbox" id="listCheckbox" name="no_kg[]" value="<?= $t['no_kegiatan'] ?>" checked />

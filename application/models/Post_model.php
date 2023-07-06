@@ -40,6 +40,14 @@ class Post_model extends CI_Model
         $set = ['dilihat' => $plus];
         $this->mydb->update_dt($where, $set, 't_post');
     }
+    public function new_posts()
+    {
+        return $this->db->select('a.*, nama_kategori, b.slug as slug_k')
+            ->from('t_post a')->join('t_kategori b', 'a.id_kategori = b.id_kategori')
+            ->where('a.is_published', '1')
+            ->order_by('a.created_at', 'DESC')
+            ->limit(6)->get()->result_array();
+    }
     function post($slug)
     {
         $this->db->select('a.*, nama_kategori, periode1, periode2, singkatan, nama_hima, logo')->from('t_post a');
@@ -58,8 +66,11 @@ class Post_model extends CI_Model
     {
         $data = [];
         $data['num_rows'] = $this->db->get_where('t_post', ['is_published' => '1'])->num_rows();
-        $data['result'] = $this->db->select('a.*, nama_kategori, b.slug as slug_k')
-            ->from('t_post a')->join('t_kategori b', 'a.id_kategori = b.id_kategori')
+        $data['result'] = $this->db->select('a.*, nama_kategori, b.slug as slug_k, singkatan')
+            ->from('t_post a')
+            ->join('t_kategori b', 'a.id_kategori = b.id_kategori')
+            ->join('t_masa_jabatan c', 'a.id_mj = c.id_mj')
+            ->join('t_hima d', 'c.id_hima = d.id_hima')
             ->where('a.is_published', '1')
             ->order_by('a.created_at', 'DESC')
             ->limit(6, $limit)->get()->result_array();

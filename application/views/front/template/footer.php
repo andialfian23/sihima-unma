@@ -1,33 +1,5 @@
 <footer class="s-footer d-print-none">
 
-    <!-- <div class="s-footer__main">
-        <div class="row"> -->
-
-    <!-- <div class="col tab-full s-footer__about">
-
-                <h4>Galeri Kegiatan Himpunan UNMA</h4>
-
-
-                <a href="https://img.unma.ac.id/image/1IEun" target="_blank">
-                    <img src="https://img.unma.ac.id/images/1IEun.th.jpg">
-                </a>
-
-                <a href="https://img.unma.ac.id/image/1Imdc" target="_blank">
-                    <img src="https://img.unma.ac.id/images/1Imdc.th.jpg">
-                </a>
-
-                <a href="https://img.unma.ac.id/image/1I93N" target="_blank">
-                    <img src="https://img.unma.ac.id/images/1I93N.th.jpg">
-                </a>
-
-
-            </div> -->
-    <!-- end s-footer__about -->
-
-    <!-- </div>
-    </div> -->
-    <!-- end s-footer__main -->
-
     <div class="s-footer__bottom">
         <div class="row">
 
