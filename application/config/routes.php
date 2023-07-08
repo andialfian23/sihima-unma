@@ -6,9 +6,13 @@ $route['404_override']          = '';
 $route['translate_uri_dashes']  = FALSE;
 
 //KEGIATAN
-$route['Kegiatan']          = 'Kegiatan/sekarang';
-$route['Pembayaran/(:num)'] = 'Pembayaran/index/$1';
+$route['Kegiatan']              = 'Kegiatan/sekarang';
+$route['Pembayaran/(:num)']     = 'Pembayaran/index/$1';
 
 //INFORMASI PESERTA
 $route['home']              = 'HM/index';
 $route['informasi/(:any)']  = 'Register/info/$1';
+$route['cetak_info_peserta/(:any)']  = 'Register/cetak/$1';
+
+//PRESENSI ONLINE
+$route['presensi_online/(:any)'] = 'Presensi/online/$1';

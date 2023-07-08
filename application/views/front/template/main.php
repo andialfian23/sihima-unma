@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="<?= base_url('wordsmith_theme/') ?>bootstrap_andy.css">
         <link rel="stylesheet" href="<?= base_url('wordsmith_theme/') ?>andy_style.css">
     <?php endif;
+
     if ($segment == 'register') : ?>
         <link rel="stylesheet" href="<?= base_url() ?>extra-libs/datatables/dataTables.bootstrap4.min.css">
 

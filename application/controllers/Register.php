@@ -165,12 +165,57 @@ class Register extends CI_Controller
         }
 
         $peserta = $query->row_array();
+        $token_presensi = $this->db->select('token_presensi,nama_kegiatan')
+            ->from('t_absen a')->join('t_kegiatan b', 'a.no_kegiatan=b.no_kegiatan')
+            ->where('no_id', $peserta['id_peserta'])->get();
+        $data_link = '';
+        foreach ($token_presensi->result_array() as $row) {
+            // $data_link .= '<a href="' . base_url() . 'Presensi/online/' . $row['token_presensi'] . '">Presensi Kegiatan '.$row['nama_kegiatan'].'</a><br>';
+            $data_link .= 'Presensi Kegiatan ' . $row['nama_kegiatan'] . ' : ' . base_url() . 'Presensi/online/' . $row['token_presensi'] . ' ';
+        }
 
         $this->load->view('front/template/main', [
             'title' => 'Informasi Peserta',
             'col'   => $peserta,
             'qrcode' => $qrcode,
+            'data_link' => $data_link,
             'file'  => 'register/info_peserta',
+        ]);
+    }
+
+    public function cetak($token = null)
+    {
+        if ($token == null) {
+            $text = 'Data Peserta tidak ditemukan!!!';
+            $this->session->set_flashdata('message', '<div class="alert-box alert-box--success hideit"> <p>' . $text . '</p><i class="fa fa-times alert-box__close"></i></div>');
+            redirect(base_url('Register'));
+        }
+        $query = $this->db->get_where('t_peserta', ['token' => $token]);
+        if ($query->num_rows() < 1) {
+            $text = 'Data Peserta tidak ditemukan!!!';
+            $this->session->set_flashdata('message', '<div class="alert-box alert-box--error hideit"> <p>' . $text . '</p><i class="fa fa-times alert-box__close"></i></div>');
+            redirect('Register');
+        } else {
+            $qrcode = $this->mydb->create_qrcode($query->row_array()['id_peserta']);
+        }
+
+        $peserta = $query->row_array();
+
+        $token_presensi = $this->db->select('token_presensi,nama_kegiatan')
+            ->from('t_absen a')->join('t_kegiatan b', 'a.no_kegiatan=b.no_kegiatan')
+            ->where('no_id', $peserta['id_peserta'])->order_by('id')->get();
+        $data_link = '';
+        foreach ($token_presensi->result_array() as $row) {
+            // $data_link .= '<a href="' . base_url() . 'Presensi/online/' . $row['token_presensi'] . '">Presensi Kegiatan '.$row['nama_kegiatan'].'</a><br>';
+            $data_link .= 'Link Presensi Kegiatan <b>' . $row['nama_kegiatan'] . '</b> : <br><br> <a href="' . base_url() . 'presensi_online/' . $row['token_presensi'] . '">
+                <i>' . base_url() . 'presensi_online/' . $row['token_presensi'] . ' </i></a><br><br><br> ';
+        }
+
+        $this->load->view('front/register/cetak_info_peserta', [
+            'col'   => $peserta,
+            'qrcode' => $qrcode,
+            'data_link' => $data_link,
+            'link_informasi' => base_url('informasi/' . $token)
         ]);
     }
 }

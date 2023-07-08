@@ -38,10 +38,17 @@
                     <ul>
                         <li>
                             - Jika kegiatan yang diikuti dilaksanakan secara online /hybrid maka
-                            Link presensi akan dikirim melalui email yang anda inputkan.
+                            Link presensi akan dikirim melalui alamat email yang anda inputkan.
                         </li>
+
                         <li>
                             - Link tersebut, akan digunakan untuk melakukan proses presensi peserta Dan akan berfungsi ketika sudah waktunya proses presensi.
+                        </li>
+                        <li>
+                            - Setelah proses registrasi selesai, cetak PDF informasi peserta
+                            (untuk meminimalisir ketika link presensi tidak terkirim ke alamat email yang anda inpputkan).
+                            Pada PDF tersebut, selain menampilkan informasi peserta terdapat link untuk melakukan proses presensi kegiatan.
+
                         </li>
                     </ul>
                 </div>
