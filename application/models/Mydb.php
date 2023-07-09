@@ -56,16 +56,6 @@ class Mydb extends CI_Model
         return $this->db->get_where('t_role', ['level' => $level])->row_array();
     }
 
-    //JABATAN
-    function get_jabatan_hima()
-    {
-        return
-            $this->db->select('a.*, role')
-            ->from('t_jabatan a')
-            ->join('t_role b', 'a.level = b.level')
-            ->get()->result_array();
-    }
-
     //BUAT QRCODE
     public function create_qrcode($nilai_qr)
     {

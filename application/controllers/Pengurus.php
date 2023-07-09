@@ -45,7 +45,7 @@ class Pengurus extends CI_Controller
             'periode'    => $periode,
             'kahim'      => $kahim,
             'masa_jabatans' => $masa_jabatans,
-            'tampil'     => $penguruss,
+            'penguruss'     => $penguruss,
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
             'file'       => 'pengurus/index',

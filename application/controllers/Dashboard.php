@@ -199,7 +199,7 @@ class Dashboard extends CI_Controller
 		$this->load->view('dashboard/template/main', [
 			'histori_jabatan' => $this->pengurus_model->histori_jabatan($npm),
 			'qrcode' 	=> $qrcode,
-			't' 		=> $mhs,
+			'mhs' 		=> $mhs,
 			'title' 	=> 'Profil : ' . $mhs['nm_pd'],
 			'file' 		=> 'data_diri',
 		]);

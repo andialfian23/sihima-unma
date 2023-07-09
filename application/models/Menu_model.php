@@ -16,23 +16,25 @@ class Menu_model extends CI_Model
 			[
 				'has-sub' => TRUE,
 				'menu_color' => 'bg-secondary bg-darken-4',
-				'menu_text' => 'Manajemen Sistem',
+				'menu_text' => 'Master Data',
 				'menu_icon' => 'ft-layers',
 				'menu_child' =>	[
 					[
-						'menu_link' => 'Admin',
+						'menu_link' => 'Admin/index',
 						'menu_text' => 'Admin',
 					], [
-						'menu_link' => 'Admin/controller',
+						'menu_link' => 'Admin/ctrlr',
 						'menu_text' => 'Controller',
 					], [
 						'menu_link' => 'Admin/role',
 						'menu_text' => 'Level & Role',
+					], [
+						'menu_link' => 'Admin/jabatan',
+						'menu_text' => 'Jabatan',
+					], [
+						'menu_link' => 'Admin/icon',
+						'menu_text' => 'Icon',
 					],
-					// [
-					// 	'menu_link' => 'Admin/icon',
-					// 	'menu_text' => 'Icon',
-					// ],
 				],
 			],
 			[
@@ -42,13 +44,13 @@ class Menu_model extends CI_Model
 				'menu_color' => 'bg-danger bg-darken-4',
 				'menu_icon' => 'ft-star'
 			],
-			[
-				'has-sub' => FALSE,
-				'menu_link' => 'Admin/jabatan',
-				'menu_text' => 'Jabatan',
-				'menu_color' => 'bg-warning bg-darken-4',
-				'menu_icon' => 'ft-star'
-			],
+			// [
+			// 	'has-sub' => FALSE,
+			// 	'menu_link' => 'Admin/jabatan',
+			// 	'menu_text' => 'Jabatan',
+			// 	'menu_color' => 'bg-warning bg-darken-4',
+			// 	'menu_icon' => 'ft-star'
+			// ],
 			[
 				'has-sub' => TRUE,
 				'menu_color' => 'bg-info bg-darken-4',

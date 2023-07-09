@@ -18,7 +18,7 @@
 <!-- BEGIN VENDOR CSS-->
 <link rel="stylesheet" type="text/css" href="<?= UNMAKU ?>themes/css/vendors.css">
 <link rel="stylesheet" type="text/css" href="<?= UNMAKU ?>themes/vendors/css/extensions/toastr.css">
-<link rel="stylesheet" type="text/css" href="<?= UNMAKU ?>themes/vendors/css/extensions/sweetalert.css">
+<!-- <link rel="stylesheet" type="text/css" href="<?= UNMAKU ?>themes/vendors/css/extensions/sweetalert.css"> -->
 <!-- END VENDOR CSS-->
 <!-- BEGIN MODERN CSS-->
 <link rel="stylesheet" type="text/css" href="<?= UNMAKU ?>themes/css/app.css">
@@ -37,7 +37,7 @@
 <!-- BEGIN VENDOR JS-->
 <script src="<?= UNMAKU ?>themes/vendors/js/vendors.min.js" type="text/javascript"></script>
 <script src="<?= UNMAKU ?>themes/vendors/js/extensions/toastr.min.js" type="text/javascript"></script>
-<script src="<?= UNMAKU ?>themes/vendors/js/extensions/sweetalert.min.js" type="text/javascript"></script>
+<!-- <script src="<?= UNMAKU ?>themes/vendors/js/extensions/sweetalert.min.js" type="text/javascript"></script> -->
 <!-- BEGIN VENDOR JS-->
 <script src="<?= UNMAKU ?>themes/vendors/js/tables/datatable/datatables.min.js"></script>
 <style>
