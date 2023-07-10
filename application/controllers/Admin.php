@@ -4,14 +4,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Admin extends CI_Controller
 {
     var $table = 't_user';
+
     public function __construct()
     {
         parent::__construct();
         is_logged_in();
+        $this->load->model('User_model', 'user');
     }
+
     public function main()
     {
-        $admins = $this->mydb->get_admin();
+        $admins = $this->user->get_admin();
         $this->load->view('dashboard/template/main', [
             'title'     => 'Dashboard Admin',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
