@@ -3,57 +3,77 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
+    var $table = 't_user';
     public function __construct()
     {
         parent::__construct();
         is_logged_in();
     }
-    public function index()
+    public function main()
     {
-        $admin = $this->mydb->get_admin();
+        $admins = $this->mydb->get_admin();
         $this->load->view('dashboard/template/main', [
             'title'     => 'Dashboard Admin',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js' => array("themes/vendors/js/tables/datatable/datatables.min.js"),
-            'admin'     => $admin,
-            'file'      => 'admin/index',
+            'admins'     => $admins,
+            'file'      => 'admin/index_adm',
         ]);
     }
-    public function cari_data()
+    public function search()
     {
-        header('Content-type: application/json');
         $npm = $_POST['npm'];
         if ($npm != null) {
-            $mhs = json_npm($npm);
-            if (empty($mhs['nm_pd'])) {
-                print_r('0');
-            } else {
-                $cek_admin = $this->mydb->get_admin($mhs['id_mahasiswa_pt']);
-                if ($cek_admin->num_rows() > 0) {
-                    print_r('1');
+            $api_mhs = $this->curl->simple_get(ADD_API . 'simak/mahasiswa_pt?id_mahasiswa_pt=' . $npm);
+            if ($api_mhs != null) {
+                $mhs = [];
+                $mhs = json_decode($api_mhs, true)[0];
+                $cek_admin = $this->mydb->get_admin($mhs['id_mahasiswa_pt'])->num_rows();
+                if ($cek_admin > 0) {
+                    $result = [
+                        'kode' => '0',
+                        'pesan' => 'Mahasiswa ini sudah menjadi Admin',
+                    ];
                 } else {
-                    print_r(json_encode($mhs));
+                    $result = [
+                        'kode' => '1',
+                        'pesan' => $mhs,
+                    ];
                 }
+            } else {
+                $result = [
+                    'kode' => '0',
+                    'pesan' => 'Data Mahasiswa tidak Ditemukan',
+                ];
             }
         } else {
-            return false;
+            $result = [
+                'kode' => '0',
+                'pesan' => 'NPM masih kosong',
+            ];
         }
+        echo json_encode($result);
     }
-    public function add_admin()
+    public function insert()
     {
         $npm = $_POST['npm'];
         if ($npm != null) {
-            //CEK DATA USER
-            $cek_user = $this->db->get_where('t_user', ['id_mahasiswa_pt' => $npm]);
+            $where = ['id_mahasiswa_pt' => $npm];
+            $cek_user = $this->db->get_where($this->table, $where);
             if ($cek_user->num_rows() > 0) {
                 $user = $cek_user->row_array();
                 if ($user['is_admin'] == '1') {
-                    notifikasi('Mahasiswa telah menjadi Admin', false);
+                    $result = [
+                        'kode' => '0',
+                        'pesan' => 'Mahasiswa telah menjadi Admin',
+                    ];
                 } else {
                     $set = ['is_admin' => '1'];
-                    $where = ['id_mahasiswa_pt' => $npm];
-                    $this->mydb->update_dt($where, $set, 't_user');
-                    notifikasi('Berhasil menjadikan Admin ', true);
+                    $this->mydb->update_dt($where, $set, $this->table);
+                    $result = [
+                        'kode' => '1',
+                        'pesan' => 'Berhasil menjadikan Admin ',
+                    ];
                 }
             } else {
                 $mhs = json_npm($npm);
@@ -62,29 +82,50 @@ class Admin extends CI_Controller
                     'id_mahasiswa_pt' => $npm,
                     'is_admin' => '1'
                 ];
-                $this->mydb->input_dt($values, 't_user');
-                notifikasi('Berhasil menambahkan ' . $mhs['nm_pd'] . ' menjadi Admin', true);
+                $this->mydb->input_dt($values, $this->table);
+                $result = [
+                    'kode' => '1',
+                    'pesan' => 'Berhasil menambahkan ' . $mhs['nm_pd'] . ' menjadi Admin',
+                ];
             }
         } else {
-            notifikasi('Gagal menambahkan admin', false);
+            $result = [
+                'kode' => '0',
+                'pesan' => 'Gagal menambahkan admin',
+            ];
         }
-        redirect(base_url('Admin/index'));
+        echo json_encode($result);
     }
-    public function del_admin($id = null)
+    public function delete()
     {
+        $id = $_POST['id'];
         if ($id == null) {
-            notifikasi('Gagal menghapus admin', false);
+            $result = [
+                'kode' => '0',
+                'pesan' => 'Gagal Menghapus Admin',
+            ];
         } else {
-            $cek_user = $this->db->get_where('t_user', ['id' => $id]);
+            $where = ['id' => $id];
+            $cek_user = $this->db->get_where($this->table, $where);
             if ($cek_user->num_rows() > 0) {
                 $set = ['is_admin' => '0'];
-                $where = ['id' => $id];
-                $this->mydb->update_dt($where, $set, 't_user');
-                notifikasi('Berhasil menghapus admin ' . json_row($cek_user->row_array()['id_mhs'])['nm_pd'], true);
+                $this->mydb->update_dt($where, $set, $this->table);
+                $nama = json_row($cek_user->row_array()['id_mhs'])['nm_pd'];
+                $result = [
+                    'kode' => '1',
+                    'pesan' => 'Berhasil Menghapus Admin ' . $nama,
+                ];
+            } else {
+                $result = [
+                    'kode' => '0',
+                    'pesan' => 'Data User Tidak Ditemukan',
+                ];
             }
         }
-        redirect(base_url('Admin'));
+        echo json_encode($result);
     }
+
+
     //MENU AKSES
     public function menu_access($level = null)
     {
@@ -121,6 +162,7 @@ class Admin extends CI_Controller
 
         notifikasi('Akses Berhasil Di ubah!!!', true);
     }
+
 
     //ICON MENU
     public function icon()

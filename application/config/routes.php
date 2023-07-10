@@ -6,6 +6,7 @@ $route['404_override']          = '';
 $route['translate_uri_dashes']  = FALSE;
 
 // MASTER DATA
+
 $route['Admin/ctrlr']          = 'sistem/ctrlr/index';
 $route['Admin/ctrlr/insert']   = 'sistem/ctrlr/insert';
 $route['Admin/ctrlr/update']   = 'sistem/ctrlr/update';

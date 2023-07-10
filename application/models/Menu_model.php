@@ -20,7 +20,7 @@ class Menu_model extends CI_Model
 				'menu_icon' => 'ft-layers',
 				'menu_child' =>	[
 					[
-						'menu_link' => 'Admin/index',
+						'menu_link' => 'Admin/main',
 						'menu_text' => 'Admin',
 					], [
 						'menu_link' => 'Admin/ctrlr',

@@ -25,13 +25,7 @@ function json_npm($npm) //dengan NPM
     $link = $ieu->curl->simple_get(ADD_API . 'simak/mahasiswa_pt?id_mahasiswa_pt=' . $npm);
     return json_decode($link, true)[0];
 }
-//LOAD VIEW
-function backEnd($file, $data)
-{
-    $ini = get_instance();
-    $data['file'] = $file;
-    $ini->load->view('template/index', $data);
-}
+
 //BASE_URL GAMBAR/FOTO
 function img_qrcode($file)
 {
