@@ -128,45 +128,6 @@ class Admin extends CI_Controller
         echo json_encode($result);
     }
 
-
-    //MENU AKSES
-    public function menu_access($level = null)
-    {
-        if ($level == null) {
-            notifikasi('Pilih role yang akan anda cek !!!', false);
-            redirect(base_url('admin/role'));
-        }
-        $role       = $this->db->get_where('t_role', ['level' => $level])->row_array();
-        $controller = $this->db->get('t_controller')->result_array();
-
-        $this->load->view('dashboard/template/main', [
-            'col'    => $role,
-            'title'  => 'Akses Menu : ' . $role['role'],
-            'tampil' => $controller,
-            'file'   => 'admin/menu_access',
-        ]);
-    }
-    public function changeaccess()
-    {
-        $menu_id = $this->input->post('menuId');
-        $role_id = $this->input->post('roleId');
-
-        $data = [
-            'level' => $role_id,
-            'id_ctr' => $menu_id
-        ];
-
-        $result = $this->db->get_where('t_menu_access', $data);
-
-        ($result->num_rows() < 1)
-            ? $this->db->insert('t_menu_access', $data)
-            : $this->db->delete('t_menu_access', $data);
-
-
-        notifikasi('Akses Berhasil Di ubah!!!', true);
-    }
-
-
     //ICON MENU
     public function icon()
     {

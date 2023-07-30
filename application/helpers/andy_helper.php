@@ -143,18 +143,7 @@ function akses_prodi()
         redirect(base_url("Dashboard"));
     }
 }
-//CEK AKSES
-function check_access($level, $menu_id)
-{
-    $ci = get_instance();
 
-    $where = ['level' => $level, 'id_ctr' => $menu_id];
-    $result = $ci->db->get_where('t_menu_access', $where);
-
-    if ($result->num_rows() > 0) {
-        return "checked='checked'";
-    }
-}
 //PAGANATION
 function halaman($base_url, $total_data)
 {

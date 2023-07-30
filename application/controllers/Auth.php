@@ -9,6 +9,7 @@ class Auth extends CI_Controller
         $this->load->library('encryption');
         $this->load->model('Hima_model', 'hima_model');
         $this->load->model('MJ_model', 'mj_model');
+        $this->load->model('User_model', 'user_model');
     }
 
     public function index()
@@ -143,7 +144,7 @@ class Auth extends CI_Controller
                 }
 
                 //ADMIN 
-                if ($this->mydb->get_admin($_SESSION['id_mahasiswa_pt'])->num_rows() > 0) {
+                if ($this->user_model->get_admin($_SESSION['id_mahasiswa_pt'])->num_rows() > 0) {
                     $role_id = '1';
                 }
 

@@ -11,7 +11,11 @@ class ctrlr extends CI_Controller
     }
     public function index()
     {
-        $controllers = $this->db->order_by('id_ctr', 'ASC')->get($this->table)->result_array();
+        $controllers = $this->db
+            ->where('nama_controller !=', 'Dashboard')
+            ->order_by('id_ctr', 'ASC')
+            ->get($this->table)
+            ->result_array();
         $this->load->view('dashboard/template/main', [
             'controllers' => $controllers,
             'title'  => 'Manajemen Controller',

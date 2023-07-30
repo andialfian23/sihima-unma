@@ -39,10 +39,8 @@
 </table>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#dataTables-sihima').DataTable({
-
-        });
+    $(function() {
+        $('#dataTables-sihima').DataTable();
     });
 </script>
 

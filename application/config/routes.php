@@ -19,6 +19,9 @@ $route['Admin/role/update']   = 'sistem/role/update';
 $route['Admin/role/delete']   = 'sistem/role/delete';
 $route['Admin/role/get']      = 'sistem/role/get_role';
 
+$route['Admin/menu_akses/get'] = 'sistem/menu_akses/get';
+$route['Admin/menu_akses/change'] = 'sistem/menu_akses/change';
+
 $route['Admin/jabatan']          = 'sistem/jabatan/index';
 $route['Admin/jabatan/insert']   = 'sistem/jabatan/insert';
 $route['Admin/jabatan/update']   = 'sistem/jabatan/update';
