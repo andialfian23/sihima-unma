@@ -134,9 +134,6 @@
                             toastr.success("Berhasil Me-nonaktifkan Akses ke Controller " + res.controller);
                         }
                     },
-                    error: function() {
-                        toastr.error("Gagal Mengubah Status Akses");
-                    }
                 });
             }
 

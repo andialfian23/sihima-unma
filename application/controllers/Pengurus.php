@@ -82,7 +82,7 @@ class Pengurus extends CI_Controller
             'title'      => 'Histori PostinganKu',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
-            'posts'     => $posts,
+            'posts'      => $posts,
             'file'       => 'post/index',
         ]);
     }

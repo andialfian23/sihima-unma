@@ -44,17 +44,18 @@ class menu_akses extends CI_Controller
                 'id_ctr' => $menu_id
             ];
 
-            $cek_controller = $this->db->get_where($this->table, $where);
-            if ($cek_controller->num_rows() < 1) {
+            $nama_controller = $this->db->get_where('t_controller', ['id_ctr'])->row()->nama_controller;
+            $cek_akses_menu = $this->db->get_where($this->table, $where);
+            if ($cek_akses_menu->num_rows() < 1) {
                 $this->db->insert($this->table, $where);
-                $status = 1;
+                $status = '1';
             } else {
                 $this->db->delete($this->table, $where);
-                $status = 0;
+                $status = '0';
             }
             $output = [];
             $output = [
-                'controller' => $cek_controller->row()->nama_controller,
+                'controller' => $nama_controller,
                 'status' => $status,
             ];
             echo json_encode($output);

@@ -3,28 +3,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Post extends CI_Controller
 {
+    var $table = 't_post';
+
     public function __construct()
     {
         parent::__construct();
         is_logged_in();
         $this->load->model('post_model');
     }
-    public function index() //view insert postingan
+
+    // VIEW ADD POST
+    public function index()
     {
+        $kategori = $this->db->get('t_kategori')->result_array();
         $this->load->view('dashboard/template/main', [
             'title'  => 'Tambah Postingan Baru',
-            'tampil' => $this->db->get('t_kategori')->result_array(),
+            'tampil' => $kategori,
             'file'   => 'post/i_post',
         ]);
     }
-    public function add() //proses insert postingan
+
+    // PROSES INSERT
+    public function insert()
     {
-        $id = 'test1';
-        $proses_upload = $this->upload_image($id);
+        $proses_upload = $this->upload_image();
         if ($proses_upload['status'] == "error") {
             $response = $proses_upload['message'];
         } else {
-            notifikasi('Postingan baru berhasil ditambahkan!!!', true);
             $cover = $proses_upload['file_name'];
             $time = date("Y-m-d H:i:s");
             $values = array(
@@ -39,11 +44,13 @@ class Post extends CI_Controller
                 'is_published'      => post_gan('is_published'),
                 'created_at'        => $time,
             );
-            $this->mydb->input_dt($values, 't_post');
+            $this->mydb->input_dt($values, $this->table);
             $response = 1;
         }
-        echo $response;
+        echo json_encode($response);
     }
+
+    // VIEW EDIT
     public function e_post($id_post = null)
     {
         if ($id_post == null) {
@@ -64,7 +71,9 @@ class Post extends CI_Controller
             redirect(base_url("Pengurus/postinganku"));
         }
     }
-    public function update($id_post = null) //proses update postingan
+
+    // PROSES UPDATE
+    public function update($id_post = null)
     {
         if ($id_post == null) {
             notifikasi('Postingan tidak ditemukan', false);
@@ -80,7 +89,7 @@ class Post extends CI_Controller
                     $response = $proses_upload['message'];
                 } else {
                     $cover = $proses_upload['file_name'];
-                    $this->mydb->update_dt($where, ['cover' => $cover], 't_post');
+                    $this->mydb->update_dt($where, ['cover' => $cover], $this->table);
                     unlink(FCPATH . 'media_library/images/' . $post['cover']); //cover
                 }
             }
@@ -90,12 +99,14 @@ class Post extends CI_Controller
                 'slug' => slugify(post_gan('judul')),
                 'body' => post_gan('isi_postingan')
             );
-            $this->mydb->update_dt($where, $set, 't_post');
+            $this->mydb->update_dt($where, $set, $this->table);
             $response = 1;
         }
         echo $response;
     }
-    private function upload_image($id)
+
+    // PROSES UPLOAD IMAGE
+    private function upload_image()
     {
         $config['upload_path'] = './media_library/images/';
         $config['allowed_types'] = 'jpg|png|jpeg';
@@ -136,6 +147,8 @@ class Post extends CI_Controller
         }
         return $this->vars;
     }
+
+    // API UPLOAD IMAGE
     private function image_cdn($folder = null, $file_name = null, $path = null)
     {
         $key = 'bdc36239822054a0ad81738a88beb056';
@@ -150,6 +163,7 @@ class Post extends CI_Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
         ));
+
         $response = curl_exec($curl);
         $err = curl_error($curl);
         curl_close($curl);
@@ -162,47 +176,68 @@ class Post extends CI_Controller
         }
     }
 
-
-    //PUBLISH & UNPUBLISH
-    function is_published($status = null)
+    // PROSES PUBLISH & UNPUBLISH
+    public function is_published()
     {
-        $id = $this->uri->segment('4');
-        $post = $this->post_model->get_post($id, $_SESSION['id_mahasiswa_pt']);
-        if ($post->num_rows() > 0) {
-            $where  = ['id_post' => $id];
-            $set    = ['is_published' => $status];
-            $this->mydb->update_dt($where, $set, 't_post');
-            if ($status == '1') {
-                notifikasi('Postingan berhasil dipublish!!!', true);
-            } else {
-                notifikasi('Postingan tidak dipublish', false);
-            }
-            redirect(base_url("Pengurus/postinganku"));
-        } else {
-            notifikasi('Postingan tidak ditemukan!!!', false);
-            redirect(base_url("Pengurus/postinganku"));
-        }
-    }
-    //DELETE POSTINGAN
-    function del_post($id_post = null)
-    {
+        $id_post = (!empty($this->input->post('id_post', TRUE))) ? $this->input->post('id_post', TRUE) : null;
         if ($id_post == null) {
-            notifikasi('Postingan tidak ditemukan', false);
-            redirect(base_url("Pengurus/postinganku"));
-        }
-        $post = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
-        if ($post->num_rows() > 0) {
-            //HAPUS POST
-            $where = ['id_post' => $id_post];
-            $data = $post->row_array();
-
-            unlink(FCPATH . 'media_library/images/' . $data['cover']);
-
-            $this->mydb->del($where, 't_post');
-            notifikasi('Postingan berhasil dihapus!!!', true);
+            $kode = '0';
+            $pesan = 'Postingan tidak ditemukan';
         } else {
-            notifikasi('Postingan tidak bisa dihapus!!!', false);
+            $post = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
+            if ($post->num_rows() > 0) {
+                $post = $post->row();
+                $status = ($post->is_published == '1') ? '0' : '1';
+                $where  = ['id_post' => $id_post];
+                $set    = ['is_published' => $status];
+                $this->mydb->update_dt($where, $set, $this->table);
+
+                $kode = '1';
+                $pesan = ($status == '1')
+                    ? 'Postingan ' . $post->judul . ' berhasil dipublish !!!'
+                    : 'Postingan ' . $post->judul . ' tidak dipublish !!!';
+            } else {
+                $kode = '0';
+                $pesan = 'Postingan Tidak Ditemukan !!!';
+            }
         }
-        redirect(base_url("Pengurus/postinganku"));
+
+        $output = [
+            'kode' => $kode,
+            'pesan' => $pesan,
+        ];
+        echo json_encode($output);
+    }
+
+    //DELETE POSTINGAN
+    public function delete()
+    {
+        $id_post = (!empty($this->input->post('id_post', TRUE))) ? $this->input->post('id_post', TRUE) : null;
+        if ($id_post == null) {
+            $kode = '0';
+            $pesan = 'Gagal Menghapus Postingan';
+        } else {
+            $post = $this->post_model->get_post($id_post, $_SESSION['id_mahasiswa_pt']);
+            if ($post->num_rows() > 0) {
+                //HAPUS POST
+                $where = ['id_post' => $id_post];
+                $cover = $post->row()->cover; // nama file
+
+                unlink(FCPATH . 'media_library/images/' . $cover);
+
+                $this->mydb->del($where, $this->table);
+                $kode = '1';
+                $pesan = 'Postingan berhasil dihapus!!!';
+            } else {
+                $kode = '0';
+                $pesan = 'Postingan tidak bisa dihapus!!!';
+            }
+        }
+
+        $output = [
+            'kode' => $kode,
+            'pesan' => $pesan
+        ];
+        echo json_encode($output);
     }
 }

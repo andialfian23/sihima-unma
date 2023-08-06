@@ -148,4 +148,37 @@ class Post_model extends CI_Model
             ->where('is_published', '1')->order_by('dilihat', 'DESC')->limit(5, 0)
             ->get()->result_array();
     }
+
+    //PAGINATION
+    public function pagination($base_url, $total_data)
+    {
+        $this->load->library('pagination');
+
+        $config['base_url']     = $base_url;   //site url
+        $config['total_rows']   = $total_data; //total data
+        $config['per_page']     = 6;           //total data yang tampil dalam satu halaman
+        $choice = $config["total_rows"] / $config["per_page"];
+        $config["num_links"]    = floor($choice);
+        //CONFIGURASI TAMPILAN PAGINATION
+        $config['full_tag_open']    = '<nav class="pgn" data-aos="fade-up"><ul>';
+        $config['full_tag_close']   = '</ul></nav>';
+        $config['first_tag_open']   = '<li>';
+        $config['first_tag_close']  = '</li>';
+        $config['last_link']        = '';
+        $config['last_tag_open']    = '<li>';
+        $config['last_tag_close']   = '</li>';
+        $config['prev_link']        = '';
+        $config['prev_tag_open']    = '<li>';
+        $config['prev_tag_close']   = '</li>';
+        $config['next_link']        = '';
+        $config['next_tag_open']    = '<li>';
+        $config['next_tag_close']   = '</li>';
+        $config['cur_tag_open']     = '<li><span class="pgn__num current">';
+        $config['cur_tag_close']    = '</span></li>';
+        $config['num_tag_open']     = '<li>';
+        $config['num_tag_close']    = '</li>';
+        //KIRIM HASIL KONFIGURASI
+        $this->pagination->initialize($config);
+        return $this->pagination->create_links();
+    }
 }

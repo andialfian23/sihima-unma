@@ -28,7 +28,7 @@ if ($posts->num_rows() > 0) :
             <?php $no = 1;
             foreach ($posts->result_array() as $t) { ?>
                 <tr>
-                    <td><?= $no ?></td>
+                    <td><?= $no++; ?></td>
                     <td><a target="_blank" href="<?= base_url("HM/post/" . $t['slug']) ?>">
                             <?= $t['judul'] ?>
                         </a>
@@ -38,21 +38,23 @@ if ($posts->num_rows() > 0) :
                     if ($akses_post->num_rows() > 0) {
                     ?>
                         <td>
-                            <?php if ($t['is_published'] == '1') { ?>
-                                <a href="<?= base_url('Post/is_published/0/' . $t['id_post']) ?>" class="btn btn-info btn-sm mb-1">
-                                    <i class="fas fa-check-circle"></i>
-                                </a>
-                            <?php } else { ?>
-                                <a href="<?= base_url('Post/is_published/1/' . $t['id_post']) ?>" class="btn btn-danger btn-sm mb-1">
-                                    <i class="fas fa-minus-circle"></i>
-                                </a>
-                            <?php } ?>
+                            <?php
+                            if ($t['is_published'] == '1') {
+                                $class_link = 'btn btn-success btn-sm mb-1';
+                                $class_icon = 'fas fa-check-circle';
+                            } else {
+                                $class_link = 'btn btn-danger btn-sm mb-1';
+                                $class_icon = 'fas fa-minus-circle';
+                            } ?>
+                            <a href="#" class="<?= $class_link; ?>" onclick="return publish_post('<?= $t['id_post'] ?>')">
+                                <i class="<?= $class_icon; ?>"></i>
+                            </a>
                         </td>
                         <td>
                             <a href="<?= base_url('Post/e_post/' . $t['id_post']) ?>" class="btn btn-info btn-sm mb-1">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a href="<?= base_url('Post/del_post/' . $t['id_post']) ?>" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Apakah anda yakin ingin menghapus Postingan <?= $t['judul'] ?> ini?')">
+                            <a href="#" class="btn btn-danger btn-sm mb-1" onclick="hapus_post('<?= $t['id_post'] ?>','<?= $t['judul'] ?>')">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>
@@ -65,13 +67,59 @@ if ($posts->num_rows() > 0) :
                     <?php endif; ?>
                 </tr>
             <?php
-                $no++;
             }
             ?>
         </tbody>
     </table>
+
     <script type="text/javascript">
-        $(document).ready(function() {
+        var base_url_post = "<?= base_url() ?>Post";
+
+        function hapus_post(id_post, nama_post) {
+            if (confirm("Apakah anda yakin akan menghapus postingan : " + nama_post + " ?")) {
+                $.ajax({
+                    url: base_url_post + "/delete",
+                    type: 'POST',
+                    data: {
+                        id_post: id_post
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.kode == '1') {
+                            toastr.success(res.pesan);
+                        } else {
+                            toastr.danger(res.pesan);
+                        }
+                        setTimeout(function() {
+                            window.location.replace("<?= base_url('Pengurus/postinganku') ?>");
+                        }, 1000);
+                    }
+                });
+            }
+        }
+
+        function publish_post(id_post) {
+            $.ajax({
+                url: base_url_post + "/is_published",
+                type: 'POST',
+                data: {
+                    id_post: id_post
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.kode == '1') {
+                        toastr.success(res.pesan);
+                    } else {
+                        toastr.danger(res.pesan);
+                    }
+                    setTimeout(function() {
+                        window.location.replace("<?= base_url('Pengurus/postinganku') ?>");
+                    }, 1000);
+                }
+            });
+        }
+
+        $(function() {
             $('#dataTables-sihima').DataTable({
                 language: {
                     url: "<?= base_url('assets/ID.json') ?>",
@@ -79,6 +127,7 @@ if ($posts->num_rows() > 0) :
             });
         });
     </script>
+
 <?php
 else :
     echo "<h4 class='text-center'>Tidak ada Postingan !!!</h4>";

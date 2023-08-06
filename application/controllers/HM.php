@@ -24,12 +24,11 @@ class HM extends CI_Controller
     //POST
     public function posts($limit = null)
     {
-        $limit = ($limit == null) ? 0 : $limit;
+        $limit  = ($limit == null) ? 0 : $limit;
         $posts  = $this->post->posts($limit);
         $jml    = $posts['num_rows'];
-        halaman(site_url('HM/posts'), $jml);
-        $pagination = $this->pagination->create_links();
-        $posts      = $posts['result'];
+        $posts  = $posts['result'];
+        $pagination = $this->post->pagination(site_url('HM/posts'), $jml);
         $this->load->view('front/template/main', [
             'title' => "Himpunan Mahasiswa Universitas Majalengka",
             'posts' => $posts,
@@ -72,8 +71,7 @@ class HM extends CI_Controller
             $post  = $this->post->posts_by_kategori($limit, $slug);
             $jml    = $post['num_rows'];
             $posts  = $post['result'];
-            halaman(site_url('HM/kategori/' . $slug), $jml);
-            $pagination = $this->pagination->create_links();
+            $pagination = $this->post->pagination(site_url('HM/kategori/' . $slug), $jml);
 
             $this->load->view('front/template/main', [
                 'kategori'      => $kategori,
@@ -90,7 +88,7 @@ class HM extends CI_Controller
     }
     public function cari()
     {
-        $keyword = urldecode(htmlspecialchars($this->input->get('search')));
+        $keyword = urldecode(str_replace("[removed]", "", htmlspecialchars($this->input->get('search', TRUE))));
         if (!isset($keyword) || $keyword == '') {
             notifikasi('Pencarian tidak ditemukan !!!', false);
             redirect(base_url('HM/block'));
@@ -104,8 +102,7 @@ class HM extends CI_Controller
             notifikasi('Pencarian tidak ditemukan !!!', false);
         }
 
-        halaman(site_url('HM/cari/' . $keyword), $jml);
-        $pagination = $this->pagination->create_links();
+        $pagination = $this->post->pagination(site_url('HM/cari/' . $keyword), $jml);
         $posts = $this->post->posts_by_find($limit, $keyword)['result'];
         $this->load->view('front/template/main', [
             'title'         => $title,
@@ -115,6 +112,7 @@ class HM extends CI_Controller
             'file'          => 'posts_by_find',
         ]);
     }
+
     //HIMPUNAN
     public function hima($singkatan = null)
     {
@@ -130,8 +128,7 @@ class HM extends CI_Controller
             $limit = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
             $posts = $this->post->posts_by_hima($limit, $singkatan);
             $jml    = $posts['num_rows'];
-            halaman(site_url('HM/kategori/' . $singkatan), $jml);
-            $pagination = $this->pagination->create_links();
+            $pagination = $this->post->pagination(site_url('HM/kategori/' . $singkatan), $jml);
             $this->load->view('front/template/main', [
                 'title'     => $title,
                 'judul_posts' => $title,
@@ -168,10 +165,9 @@ class HM extends CI_Controller
     {
         $limit  = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
         $hima   = $this->hima_model->hima_aktif($limit);
-        $jml    = $hima['num_rows'];
-        halaman(site_url('HM/himpunan'), $jml);
-        $all_hima = $hima['result'];
-        $pagination = $this->pagination->create_links();
+        $jml        = $hima['num_rows'];
+        $all_hima   = $hima['result'];
+        $pagination = $this->post->pagination(site_url('HM/himpunan'), $jml);
 
         $this->load->view('front/template/main', [
             'title' => 'Himpunan Mahasiswa Universitas Majalengka',

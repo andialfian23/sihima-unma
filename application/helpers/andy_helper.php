@@ -13,12 +13,14 @@ function cURL_gan($link)
     $result = json_decode($result, true);
     return $result;
 }
+
 function json_row($id_mhs) //dengan ID_MHS 180137
 {
     $ieu = get_instance();
     $link = $ieu->curl->simple_get(ADD_API . 'simak/mahasiswa_pt?id_mahasiswa_pt=' . $id_mhs);
     return json_decode($link, true)[0];
 }
+
 function json_npm($npm) //dengan NPM
 {
     $ieu = get_instance();
@@ -55,13 +57,15 @@ function post_gan($data)
     $ieu = get_instance();
     return $ieu->input->post($data);
 }
+
 function post_aman($data)
 {
     $ieu = get_instance();
     // MENCEGAH SQL INJECTION
-    // str_replace("'", "", htmlspecialchars($this->input->post('jenis'), ENT_QUOTES));
-    return htmlspecialchars($ieu->input->post($data));
+
+    return str_replace("[remove]", "", htmlspecialchars($ieu->input->post($data, TRUE), ENT_QUOTES));
 }
+
 //NOTIFIKASI SESSION FLASHDATA
 function notifikasi($text, $type)
 {
@@ -69,6 +73,7 @@ function notifikasi($text, $type)
     $warna =  ($type == true) ? 'success' : 'danger';
     $ieu->session->set_flashdata('message', '<div class="alert alert-' . $warna . '" role="alert">' . $text . '</div>');
 }
+
 //FORMAT TANGGAL d M Y
 function date_id($date)
 {
@@ -83,6 +88,7 @@ function date_id($date)
     $result = $tgl . " " . $BulanIndo[(int)$bulan - 1] . " " . $tahun;
     return $result;
 }
+
 //WAKTU PELAKSANAAN
 function waktu_pelaksanaan($mulai, $selesai)
 {
@@ -99,7 +105,8 @@ function waktu_pelaksanaan($mulai, $selesai)
     }
     return $result;
 }
-//AKSES
+
+//CEK AKSES CONTROLLER
 function akses($controller)
 {
     $ieu = get_instance();
@@ -109,6 +116,7 @@ function akses($controller)
     ]);
     return $userAccess;
 }
+
 //AUTH
 function is_logged_in()
 {
@@ -122,9 +130,10 @@ function is_logged_in()
         redirect($location);
     } else {
         $level      = $_SESSION['role_id'];   //LEVEL
-        $controller = $ci->uri->segment('1');   //Nama Controller
+        $controller = $ci->uri->segment('1'); //Nama Controller
 
-        $userAccess = $ci->db->select('a.*, nama_controller')->from('t_menu_access a')
+        $userAccess = $ci->db->select('a.*, nama_controller')
+            ->from('t_menu_access a')
             ->join('t_controller b', 'a.id_ctr=b.id_ctr')
             ->where('level', $level)
             ->where('nama_controller', $controller)->get();
@@ -135,7 +144,8 @@ function is_logged_in()
         }
     }
 }
-// KAPRODI DILARANG AKSES
+
+// KAPRODI DILARANG AKSES CONTROLLER
 function akses_prodi()
 {
     if ($_SESSION['role_id'] == 2) {
@@ -144,36 +154,6 @@ function akses_prodi()
     }
 }
 
-//PAGANATION
-function halaman($base_url, $total_data)
-{
-    $ieu = get_instance();
-    $config['base_url']     = $base_url;    //site url
-    $config['total_rows']   = $total_data; //total data
-    $config['per_page']     = 6;            //total data yang tampil dalam satu halaman
-    $choice = $config["total_rows"] / $config["per_page"];
-    $config["num_links"]    = floor($choice);
-    //CONFIGURASI TAMPILAN PAGINATION
-    $config['full_tag_open']    = '<nav class="pgn" data-aos="fade-up"><ul>';
-    $config['full_tag_close']   = '</ul></nav>';
-    $config['first_tag_open']   = '<li>';
-    $config['first_tag_close']  = '</li>';
-    $config['last_link']        = '';
-    $config['last_tag_open']    = '<li>';
-    $config['last_tag_close']   = '</li>';
-    $config['prev_link']        = '';
-    $config['prev_tag_open']    = '<li>';
-    $config['prev_tag_close']   = '</li>';
-    $config['next_link']        = '';
-    $config['next_tag_open']    = '<li>';
-    $config['next_tag_close']   = '</li>';
-    $config['cur_tag_open']     = '<li><span class="pgn__num current">';
-    $config['cur_tag_close']    = '</span></li>';
-    $config['num_tag_open']     = '<li>';
-    $config['num_tag_close']    = '</li>';
-    //KIRIM HASIL KONFIGURASI
-    $ieu->pagination->initialize($config);
-}
 //ENCRYPT OTP
 function encrypt_encode($msg)
 {

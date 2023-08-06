@@ -134,11 +134,12 @@
 
         // send data
         $.ajax({
-            url: '<?= base_url('Post/add') ?>',
+            url: '<?= base_url('Post/insert') ?>',
             type: 'POST',
             data: dataset,
             contentType: false,
             processData: false,
+            dataType: 'json',
             success: function(response) {
                 if (response == '1') {
                     toastr.success("Postingan baru berhasil dibuat!!!");
@@ -161,6 +162,7 @@
             reader.readAsDataURL(input.files[0]);
         }
     };
+
     $(document).ready(function() {
         // Image Preview
         $('#cover').on('change', function() {
@@ -174,6 +176,7 @@
 
     });
 </script>
+
 <div class="row">
     <div class="col-md-9 col-sm-12 mb-1">
         <input autofocus type="text" class="form-control form-control-lg mb-1" name="judul" id="judul" placeholder="Judul Postingan" value="">
