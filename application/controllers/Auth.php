@@ -145,7 +145,7 @@ class Auth extends CI_Controller
 
                 //ADMIN 
                 if ($this->user_model->get_admin($_SESSION['id_mahasiswa_pt'])->num_rows() > 0) {
-                    $role_id = '1';
+                    $role_id = 1;
                 }
 
                 $data2 = [

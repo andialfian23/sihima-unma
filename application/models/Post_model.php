@@ -6,9 +6,10 @@ class Post_model extends CI_Model
     //BACK END
     function get_postingan($id_mj)     //ALL POST per masa jabatan
     {
-        $this->db->select('a.*, nama_kategori ');
+        $this->db->select('a.*, nama_kategori, nama_mhs as pembuat ');
         $this->db->from('t_post a');
         $this->db->join('t_kategori b', 'a.id_kategori = b.id_kategori');
+        $this->db->join('t_mahasiswa c', 'a.id_mahasiswa_pt=c.id_mahasiswa_pt', 'LEFT');
         $this->db->where('id_mj', $id_mj);
         $this->db->order_by('created_at', 'DESC');
         return $this->db->get();

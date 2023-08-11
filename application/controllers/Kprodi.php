@@ -84,7 +84,7 @@ class Kprodi extends CI_Controller
             'id_mj'      => $id_mj,
             'periode'    => $periode,
             'kahim'      => $kahim,
-            'tampil'     => $penguruss,
+            'penguruss'     => $penguruss,
             'masa_jabatans' => $masa_jabatans,
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),

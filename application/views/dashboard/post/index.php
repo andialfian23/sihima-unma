@@ -60,10 +60,9 @@ if ($posts->num_rows() > 0) :
                         </td>
                     <?php }
                     if (akses('Kprodi')->num_rows() > 0) :
-                        $author = json_npm($t['id_mahasiswa_pt'])['nm_pd'];
                     ?>
                         <td><?= $t['dilihat'] ?></td>
-                        <td><?= $author ?></td>
+                        <td><?= $t['pembuat'] ?></td>
                     <?php endif; ?>
                 </tr>
             <?php

@@ -88,7 +88,7 @@ class HM extends CI_Controller
     }
     public function cari()
     {
-        $keyword = urldecode(str_replace("[removed]", "", htmlspecialchars($this->input->get('search', TRUE))));
+        $keyword = str_replace("[removed]", "", htmlspecialchars(urldecode($this->input->get('search', TRUE))));
         if (!isset($keyword) || $keyword == '') {
             notifikasi('Pencarian tidak ditemukan !!!', false);
             redirect(base_url('HM/block'));
