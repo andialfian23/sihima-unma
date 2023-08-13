@@ -22,31 +22,28 @@ if ($tagihan_anggota->num_rows() > 0) {
         <tbody>
             <?php $no = 1;
             foreach ($tagihan_anggota->result_array() as $row) {
-                $nama = json_npm($row['id_mahasiswa_pt'])['nm_pd'];
             ?>
                 <tr>
-                    <td><?= $row['id_mahasiswa_pt'] ?></td>
-                    <td><?= $nama ?></td>
-                    <td>Rp <?= number_format($tagihan['jml_tagihan']) ?></td>
+                    <td><?= $row['npm'] ?></td>
+                    <td><?= $row['nama_mhs'] ?></td>
+                    <td>Rp <?= number_format($row['jml_tagihan']) ?></td>
                     <td>
                         <?php
-                        $j = number_format($tagihan['jml_tagihan']);
-                        $n = number_format($row['dibayar']);
-                        if ($n == '0') {
+                        if ($row['jml_tagihan'] == $row['sisa_tagihan']) {
                         ?>
                             <a href="<?= base_url('Pembayaran/' . $row['no_ta']) ?>" class="text-danger">
                                 <b>Belum Bayar</b>
                             </a>
                         <?php
-                        } elseif ($n == $j) {
+                        } elseif ($row['sisa_tagihan'] == 0) {
                             echo 'Lunas';
                         } else {
-                            echo '<a href="' . base_url('Pembayaran/' . $row['no_ta']) . '">' . $n . '</a>';
+                            echo '<a href="' . base_url('Pembayaran/' . $row['no_ta']) . '">' . number_format($row['jml_tagihan']) . '</a>';
                         }
                         ?>
                     </td>
                     <td>
-                        <a href="<?= base_url('Tagihan_anggota/delete/' . $row['no_ta']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus data tagihan <?= $tagihan['nama_tagihan'] . ' ' . $nama; ?> ini?')">
+                        <a href="<?= base_url('Tagihan_anggota/delete/' . $row['no_ta']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin ingin menghapus data tagihan <?= $row['nama_tagihan'] . ' ' . $row['nama_mhs']; ?> ini?')">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>

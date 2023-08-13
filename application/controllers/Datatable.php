@@ -35,14 +35,14 @@ class Datatable extends CI_Controller
 				$_POST['start'] = '0';
 				$_POST['draw'] = null;
 			}
-			$column_order     = array('tgl_bayar', 'id_mahasiswa_pt', 'nama_tagihan', 'nominal_bayar');
+			$column_order     = array('tgl_bayar', 'nama_mhs', 'nama_tagihan', 'nominal_bayar');
 			$list   = $this->pembayaran->get_datatables($column_order, $id_mj, null);
 			$data   = array();
 			foreach ($list as $key) {
 				$row      = array();
 
 				$row['tgl_bayar']   = $key->tgl_bayar;
-				$row['nama']   	 	= json_npm($key->id_mahasiswa_pt)['nm_pd'];
+				$row['nama']   	 	= $key->nama_mhs;
 				$row['nama_tagihan']    = $key->nama_tagihan;
 				$row['nominal_bayar']   = $key->nominal_bayar;
 				$row['aksi']			= "<a href='#' onclick='return hapus($key->no_pb)'class='btn btn-danger btn-sm'><i class='fa fa-trash'></i></a>";

@@ -29,6 +29,10 @@
             },
             serverSide: true,
             processing: true,
+            "columnDefs": [{
+                "orderable": false,
+                "targets": [4]
+            }],
             ajax: {
                 url: "<?= base_url('Datatable/histori_pembayaran') ?>",
                 type: "POST",
@@ -36,6 +40,7 @@
             order: [0, 'desc'],
             columns: [{
                     data: 'tgl_bayar',
+                    className: 'text-center',
                 },
                 {
                     data: 'nama'
@@ -49,6 +54,7 @@
                 },
                 {
                     data: 'aksi',
+                    className: 'text-center'
                 },
             ],
             "footerCallback": function(row, data, start, end, display) {
@@ -85,7 +91,8 @@
                 $(api.column(3).footer()).html(
                     numFormat(total)
                 );
-            }
+            },
+
         });
     });
 

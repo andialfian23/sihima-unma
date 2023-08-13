@@ -22,15 +22,17 @@ class MJ_model extends CI_Model
         $contact_person = $this->db->from('t_contact_person')
             ->where('id_hima', $id_hima)
             ->order_by('nama_contact', 'ASC')->get();
-        $this->db->select('a.*, count(b.id_mahasiswa_pt) as jml_pengurus, 
+        $this->db->select('a.*, 
+            (SELECT count(id_mahasiswa_pt) FROM t_pengurus WHERE id_mj=a.id_mj) AS jml_pengurus,
             concat(periode1,"/",periode2) as periode,
+            (SELECT nama_mhs FROM t_pengurus as ps
+                LEFT JOIN t_mahasiswa as mhs ON ps.id_mahasiswa_pt=mhs.id_mahasiswa_pt
+                 WHERE id_mj=a.id_mj AND id_jabatan=2) AS kahim,
             singkatan, nama_hima, logo, tempat_sekre, status_hima')
             ->from('t_masa_jabatan a')
-            ->join('t_pengurus b', 'a.id_mj = b.id_mj')
             ->join('t_hima c', 'a.id_hima = c.id_hima')
             ->where('a.id_hima', $id_hima)
-            ->where('status_mj', '1')
-            ->group_by('a.id_mj', 'ASC');
+            ->where('status_mj', '1');
         $masa_jabatan = $this->db->get();
         $no = 0;
         if ($masa_jabatan->num_rows() > 0) {
@@ -64,8 +66,8 @@ class MJ_model extends CI_Model
                 $row['status_mj'] = $t['status_mj'];
 
                 //KETUA HIMA & JUMLAH PENGURUS
-                $kahim = $this->kahim($t['id_mj']);
-                if ($kahim != 'Belum Dipilih') {
+                $kahim = $t['kahim'];
+                if ($kahim != '') {
                     $row['ketua_himpunan'] = $kahim;
                     $row['jml_pengurus'] = $t['jml_pengurus'];
                 } else {
@@ -141,14 +143,5 @@ class MJ_model extends CI_Model
         $data['row_array'] = $masa_jabatan->row_array();
         $data['num_rows'] = $masa_jabatan->num_rows();
         return $data;
-    }
-    function kahim($id_mj)
-    {
-        $this->db->select('id_mahasiswa_pt');
-        $this->db->from('t_pengurus a')
-            ->join('t_masa_jabatan b', 'a.id_mj = b.id_mj');
-        $this->db->where('a.id_mj', $id_mj)->where('id_jabatan', '2');
-        $npm =  $this->db->get();
-        return ($npm->num_rows() > 0) ? json_npm($npm->row_array()['id_mahasiswa_pt'])['nm_pd'] : 'Belum Dipilih';
     }
 }

@@ -49,10 +49,10 @@ class Tagihan_anggota extends CI_Controller
         $id_mj  = $_SESSION['id_mj'];
         $tg     = $this->tagihan->get_tagihan($id_mj, $no_tg);
         if ($tg->num_rows() > 0) {
-            $pengurus =  $this->pengurus->get_anggota_pengurus($_SESSION['hima_id'], $id_mj);
+            $penguruss =  $this->tagihan->get_anggota_pengurus($id_mj, $no_tg);
             $this->load->view('dashboard/template/main', [
                 'title'  => 'Buat Tagihan Pengurus',
-                'pengurus' => $pengurus,
+                'penguruss' => $penguruss->result_array(),
                 'tagihan'    => $tg->row_array(),
                 'file'   => 'tagihan_anggota/i_tp',
             ]);
@@ -137,6 +137,7 @@ class Tagihan_anggota extends CI_Controller
             redirect(base_url("Tagihan/tg_pengurus/" . $no_tg));
         }
     }
+
     function delete($no_ta = null)
     {
         if ($no_ta == null) {

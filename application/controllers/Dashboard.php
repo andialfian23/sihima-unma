@@ -155,11 +155,8 @@ class Dashboard extends CI_Controller
 	{
 		akses_prodi();
 		$file = ($_SESSION['role_id'] == '5') ? 'histori_pembayaran' : 'histori_pembayaranku';
-		$pembayaran = $this->tagihan->pembayaranku($_SESSION['id_mahasiswa_pt']);
-
 		$this->load->view('dashboard/template/main', [
 			'title' 	 => 'Histori Pembayaran',
-			'tampil' 	 => $pembayaran,
 			'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
 			'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
 			'file' 		 => 'pembayaran/' . $file,

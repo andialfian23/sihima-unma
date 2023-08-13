@@ -7,6 +7,7 @@ class Auth extends CI_Controller
     {
         parent::__construct();
         $this->load->library('encryption');
+        $this->load->model('auth_model');
         $this->load->model('Hima_model', 'hima_model');
         $this->load->model('MJ_model', 'mj_model');
         $this->load->model('User_model', 'user_model');
@@ -14,23 +15,26 @@ class Auth extends CI_Controller
 
     public function index()
     {
-        if ($this->session->userdata('id_mhs')) {
-            redirect(base_url("Dashboard"));
+        if (isset($_SESSION['logged_in'])) {
+            redirect(base_url('Dashboard'));
         }
-        // if (isset($_SESSION['logged_in'])) {
-        //     redirect(base_url('Dashboard'));
-        // }
 
-        //-- LOCAL OTP--//
-        $data['otp'] = '914';
-        $data['title'] = "Login Page";
-        $this->load->view('login', $data);
-        //--END LOCAL OTP--//
+        //-- VIEW LOGIN LOCAL --//
+        $this->load->view('auth/login');
+        //--END VIEW LOGIN LOCAL --//
 
 
         // $this->load->view('401.php');
     }
 
+    public function index2()
+    {
+        $data['otp'] = '914';
+        $data['title'] = "Login Page";
+        $this->load->view('login', $data);
+    }
+
+    // ---------- proses login untuk di hosting unmaku ----------
     function verify_v2($id = NULL)
     {
         if ($id == NULL) {
@@ -54,7 +58,6 @@ class Auth extends CI_Controller
             $this->result(1, $plain_text);
         }
     }
-
     private function result($result, $plain_text)
     {
         $data = explode('#', $plain_text);
@@ -177,6 +180,121 @@ class Auth extends CI_Controller
         }
 
         redirect($location);
+    }
+    // ----------------------------------------------------------
+
+    public function login() // proses login digunakan ketika login di Local
+    {
+        $id = str_replace("[removed]", "", htmlspecialchars($this->input->post('id', TRUE)));
+        $res = [];
+        if (strlen($id) == 3) {
+            $cek_kaprodi = $this->auth_model->get_kaprodi($id);
+            if ($cek_kaprodi->num_rows() > 0) {
+                $kaprodi = $cek_kaprodi->row();
+                $data_session = [
+                    'hima_id'     => $kaprodi->id_hima,
+                    'singkatan'   => $kaprodi->singkatan,
+                    'nama_hima'   => $kaprodi->nama_hima,
+                    'id_mj'       => $kaprodi->id_mj,
+                    'per_jabatan' => $kaprodi->periode,
+                    'nama_user'   => $kaprodi->nama_kaprodi,
+                    'jabatan'     => 'Ketua Program Studi',
+                    'role_id'     => 2,
+                    'level_name'  => 'KAPRODI',
+                    'logged_in'   => TRUE,
+                    'id_ap'       => 2,
+                    'username'    => $id,
+                    'id_level'    => 106,
+                    'app_level'   => 2,
+                ];
+                $this->session->set_userdata($data_session);
+
+                $res = [
+                    'status' => 1,
+                    'pesan' => $data_session,
+                ];
+            } else {
+                $res = [
+                    'status' => 0,
+                    'pesan' => 'ID Dosen Tidak Terdaftar Pada Sistem',
+                ];
+            }
+        } elseif (strlen($id) == 12) {
+            $cek_mahasiswa = $this->auth_model->get_mahasiswa($id);
+
+            if ($cek_mahasiswa->num_rows() > 0) {
+                $mhs = $cek_mahasiswa->row();
+                foreach ($cek_mahasiswa->result() as $mhs) {
+                    $is_admin  = $mhs->is_admin;
+                    $hima_id    = $mhs->id_hima;
+                    $singkatan  = $mhs->singkatan;
+                    $nama_hima  = $mhs->nama_hima;
+
+                    if ($mhs->status_mj == 1) {
+                        $status_mj = 1;
+                        $nama_user = $mhs->nama_mhs;
+                        $id_mj   = $mhs->id_mj;
+                        $periode = $mhs->periode;
+                        $role_id = $mhs->role_id;
+                        $jabatan = $mhs->jabatan;
+                        break;
+                    } else {
+                        $status_mj = 0;
+                        $nama_user = $mhs->nama_mhs;
+                        $id_mj   = $mhs->id_mj;
+                        $periode = $mhs->periode;
+                        $role_id = $mhs->role_id;
+                        $jabatan = $mhs->jabatan;
+                    }
+                }
+
+                //CEK DEMISIONER ATAU BUKAN
+                if ($status_mj == 0) {
+                    $role_id = 7;
+                    $jabatan = 'Demisioner';
+                }
+
+                //CEK ADMIN / BUKAN
+                $role_id = ($is_admin == '1') ? '1' : $role_id;
+                $data_session = [
+                    'level_name' => 'MAHASISWA',
+                    'nama_user' => $nama_user,
+                    'id_mj' => $id_mj,
+                    'per_jabatan' => $periode,
+                    'role_id' => $role_id,
+                    'jabatan' => $jabatan,
+                    'hima_id' => $hima_id,
+                    'singkatan' => $singkatan,
+                    'nama_hima' => $nama_hima,
+                    'logged_in'   => TRUE,
+                    'id_app'      => 16,
+                    'username'    => $id,
+                    'id_level'    => 105,
+                    'app_level'   => 1,
+                ];
+                $this->session->set_userdata($data_session);
+
+                $res = [
+                    'status' => 1,
+                    'pesan' => $data_session,
+                ];
+            } else {
+                $res = [
+                    'status' => 0,
+                    'pesan' => 'NPM Tidak terdaftar dalam sistem',
+                ];
+            }
+        } else {
+            $res = [
+                'status' => 0,
+                'pesan' => 'Input Bukan id_dosen / npm',
+            ];
+        }
+
+        //HAPUS QRCODE EXPIRED
+        $this->mydb->del_qrcode_exp();
+
+        echo json_encode($res);
     }
 
     public function logout()
