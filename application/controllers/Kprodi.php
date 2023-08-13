@@ -60,25 +60,20 @@ class Kprodi extends CI_Controller
     //Anggota Pengurus
     public function pengurus($id_mj = null)
     {
-        if ($id_mj != null) {
-            $id_mj = (!empty($id_mj)) ? $id_mj : $_SESSION['id_mj'];
-            $masa_jabatan = $this->MJ_model->get_masa_periode($id_mj);
-            if (($masa_jabatan->num_rows() > 0)) {
-                $mj = $masa_jabatan->row_array();
-                $id_hima = $mj['id_hima'];
-            } else {
-                notifikasi('Data anggota tidak ditemukan', false);
-                redirect(base_url('Dashboard'));
-            }
+        $id_mj = ($id_mj == null) ? $_SESSION['id_mj'] : $id_mj;
+
+        $masa_jabatan = $this->MJ_model->get_masa_periode($id_mj);
+        if ($masa_jabatan->num_rows() > 0) {
+            $mj = $masa_jabatan->row_array();
             $periode = $mj['periode'];
+            $kahim   = $mj['kahim'];
         } else {
-            $id_hima = $_SESSION['hima_id'];
-            $id_mj   = $_SESSION['id_mj'];
-            $periode = $_SESSION['per_jabatan'];
+            notifikasi('Data anggota tidak ditemukan', false);
+            redirect(base_url('Dashboard'));
         }
-        $kahim     = $this->MJ_model->kahim($id_mj);
+
         $masa_jabatans = $this->MJ_model->get_masa_jabatan($_SESSION['hima_id']);
-        $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
+        $penguruss = $this->pengurus_model->get_anggota_pengurus($_SESSION['hima_id'], $id_mj);
         $this->load->view('dashboard/template/main', [
             'title'      => 'Anggota Pengurus ' . $periode,
             'id_mj'      => $id_mj,
@@ -101,18 +96,17 @@ class Kprodi extends CI_Controller
             'file'       => 'mahasiswa',
         ]);
     }
-    public function kegiatan($segment_id_mj = null)
+    public function kegiatan($id_mj = null)
     {
-        $id_mj          = (!empty($segment_id_mj)) ? $segment_id_mj : $_SESSION['id_mj'];
+        $id_mj          = ($id_mj != null) ? $id_mj : $_SESSION['id_mj'];
         $mj             = $this->MJ_model->get_masa_periode($id_mj)->row_array();
-        $periode        = (!empty($segment_id_mj)) ? $mj['periode'] : $_SESSION['per_jabatan'];
-        $masa_jabatan   = $this->MJ_model->kahim($id_mj);
-        $kegiatan       = $this->kegiatan_model->get_kegiatan($mj['id_mj']);
+        $periode        = (!empty($id_mj)) ? $mj['periode'] : $_SESSION['per_jabatan'];
+        $kegiatan       = $this->kegiatan_model->get_kegiatan($id_mj);
 
         $this->load->view('dashboard/template/main', [
             'title'      => 'Kegiatan ' . $_SESSION['singkatan'] . ' ' . $periode,
-            'id_mj'      => $mj['id_mj'],
-            'kahim'      => $masa_jabatan,
+            'id_mj'      => $id_mj,
+            'kahim'      => $mj['kahim'],
             'periode'    => $periode,
             'link'       => 'Kprodi/kegiatan',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),

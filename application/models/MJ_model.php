@@ -3,73 +3,80 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class MJ_model extends CI_Model
 {
+    var $table = 't_masa_jabatan';
+
     public function get_masa_jabatan($id_hima)  //MORE
     {
         $this->db->select('a.*, count(b.id_mahasiswa_pt) as jml_pengurus, singkatan, concat(periode1,"/",periode2) as periode');
-        $this->db->from('t_masa_jabatan a')->join('t_pengurus b', 'a.id_mj = b.id_mj')->join('t_hima c', 'a.id_hima = c.id_hima');
+        $this->db->from($this->table . ' a')->join('t_pengurus b', 'a.id_mj = b.id_mj')->join('t_hima c', 'a.id_hima = c.id_hima');
         $this->db->where('a.id_hima', $id_hima)->group_by('id_mj', 'ASC')->order_by('periode1', 'DESC');
         return $this->db->get()->result_array();
     }
-    function get_masa_periode($id_mj)   //SINGLE
+
+    public function get_masa_periode($id_mj)   //SINGLE
     {
-        $this->db->select('a.*, count(b.id_mahasiswa_pt) as jml_pengurus, singkatan, concat(periode1,"/",periode2) as periode');
-        $this->db->from('t_masa_jabatan a')->join('t_pengurus b', 'a.id_mj = b.id_mj')->join('t_hima c', 'a.id_hima = c.id_hima');
-        $this->db->where('a.id_mj', $id_mj)->group_by('a.id_mj', 'ASC');
+        $this->db->select("mj.*, concat(periode1,'/',periode2) as periode, h.singkatan, 
+            (SELECT count(id_mahasiswa_pt) FROM t_pengurus WHERE id_mj=$id_mj) as jml_pengurus,
+            (SELECT nama_mhs FROM t_pengurus AS p 
+                LEFT JOIN t_mahasiswa AS mhs ON p.id_mahasiswa_pt=mhs.id_mahasiswa_pt
+                WHERE id_mj=$id_mj AND id_jabatan=2) as kahim");
+        $this->db->from('t_masa_jabatan mj');
+        $this->db->join('t_hima h', 'mj.id_hima = h.id_hima');
+        $this->db->where('mj.id_mj', $id_mj);
         return $this->db->get();
     }
+
     public function get_mj_aktif($id_hima) //SINGLE / 1 ROW
     {
-        $contact_person = $this->db->from('t_contact_person')
-            ->where('id_hima', $id_hima)
-            ->order_by('nama_contact', 'ASC')->get();
-        $this->db->select('a.*, 
-            (SELECT count(id_mahasiswa_pt) FROM t_pengurus WHERE id_mj=a.id_mj) AS jml_pengurus,
-            concat(periode1,"/",periode2) as periode,
-            (SELECT nama_mhs FROM t_pengurus as ps
-                LEFT JOIN t_mahasiswa as mhs ON ps.id_mahasiswa_pt=mhs.id_mahasiswa_pt
-                 WHERE id_mj=a.id_mj AND id_jabatan=2) AS kahim,
-            singkatan, nama_hima, logo, tempat_sekre, status_hima')
-            ->from('t_masa_jabatan a')
+        $contact_person = $this->db->where('id_hima', $id_hima)->order_by('nama_contact', 'ASC')->get('t_contact_person');
+
+        $masa_jabatan = $this->db->select('a.*, concat(periode1,"/",periode2) as periode,
+                singkatan, nama_hima, logo, tempat_sekre, status_hima, 
+                (SELECT count(id_mahasiswa_pt) FROM t_pengurus 
+                    WHERE id_mj=a.id_mj) AS jml_pengurus,
+                (SELECT nama_mhs FROM t_pengurus as ps
+                    LEFT JOIN t_mahasiswa as mhs ON ps.id_mahasiswa_pt=mhs.id_mahasiswa_pt
+                    WHERE id_mj=a.id_mj AND id_jabatan=2) AS kahim')
+            ->from($this->table . ' a')
             ->join('t_hima c', 'a.id_hima = c.id_hima')
             ->where('a.id_hima', $id_hima)
-            ->where('status_mj', '1');
-        $masa_jabatan = $this->db->get();
+            ->where('status_mj', '1')->get();
         $no = 0;
         if ($masa_jabatan->num_rows() > 0) {
-            foreach ($masa_jabatan->result_array() as $t) {
+            foreach ($masa_jabatan->result_array() as $key) {
                 $row = [];
 
-                $row['id_mj']   = $t['id_mj'];
-                $row['id_hima'] = $t['id_hima'];
-                if (($t['logo'] != NULL) || ($t['logo'] != '')) {
-                    $row['logo'] = $t['logo'];
+                $row['id_mj']   = $key['id_mj'];
+                $row['id_hima'] = $key['id_hima'];
+                if (($key['logo'] != NULL) || ($key['logo'] != '')) {
+                    $row['logo'] = $key['logo'];
                 } else {
                     $row['logo'] = '';
                 }
 
-                $row['singkatan'] = $t['singkatan'];
-                $row['nama_hima'] = $t['nama_hima'];
-                $row['periode']   = $t['periode']; //
-                $row['sk'] = $t['sk'];
+                $row['singkatan'] = $key['singkatan'];
+                $row['nama_hima'] = $key['nama_hima'];
+                $row['periode']   = $key['periode']; //
+                $row['sk'] = $key['sk'];
                 if (
-                    ($t['tgl_awal'] != '0000-00-00') && ($t['tgl_akhir'] != '0000-00-00')
-                    && ($t['tgl_awal'] != NULL) && ($t['tgl_akhir'] != NULL)
+                    ($key['tgl_awal'] != '0000-00-00') && ($key['tgl_akhir'] != '0000-00-00')
+                    && ($key['tgl_awal'] != NULL) && ($key['tgl_akhir'] != NULL)
                 ) {
-                    $row['tgl_awal'] = $t['tgl_awal'];
-                    $row['tgl_akhir'] = $t['tgl_akhir'];
-                    $row['masa_jabatan'] = date_id($t['tgl_awal']) . ' - ' . date_id($t['tgl_akhir']);
+                    $row['tgl_awal'] = $key['tgl_awal'];
+                    $row['tgl_akhir'] = $key['tgl_akhir'];
+                    $row['masa_jabatan'] = date_id($key['tgl_awal']) . ' - ' . date_id($key['tgl_akhir']);
                 } else {
                     $row['tgl_awal'] = ' ';
                     $row['tgl_akhir'] = ' ';
                     $row['masa_jabatan'] = ' ';
                 }
-                $row['status_mj'] = $t['status_mj'];
+                $row['status_mj'] = $key['status_mj'];
 
                 //KETUA HIMA & JUMLAH PENGURUS
-                $kahim = $t['kahim'];
+                $kahim = $key['kahim'];
                 if ($kahim != '') {
                     $row['ketua_himpunan'] = $kahim;
-                    $row['jml_pengurus'] = $t['jml_pengurus'];
+                    $row['jml_pengurus'] = $key['jml_pengurus'];
                 } else {
                     $row['ketua_himpunan'] = 'Belum Dipilih';
                     $row['jml_pengurus'] = 'Belum Diketahui';
@@ -88,8 +95,8 @@ class MJ_model extends CI_Model
                     $row['contact_person'] = 'Belum Ditambahkan';
                 }
 
-                $row['tempat_sekre'] = ($t['tempat_sekre'] != null) ? $t['tempat_sekre'] : 'Belum Diketahui';
-                $row['status_hima'] = $t['status_hima'];
+                $row['tempat_sekre'] = ($key['tempat_sekre'] != null) ? $key['tempat_sekre'] : 'Belum Diketahui';
+                $row['status_hima'] = $key['status_hima'];
                 $result = $row;
                 $no++;
             }
@@ -136,9 +143,10 @@ class MJ_model extends CI_Model
         }
         return $result;
     }
+
     function cek_mj($id_mj, $id_hima)
     {
-        $masa_jabatan = $this->db->get_where('t_masa_jabatan', ['id_mj' => $id_mj, 'id_hima' => $id_hima]);
+        $masa_jabatan = $this->db->get_where($this->table, ['id_mj' => $id_mj, 'id_hima' => $id_hima]);
         $data = [];
         $data['row_array'] = $masa_jabatan->row_array();
         $data['num_rows'] = $masa_jabatan->num_rows();
