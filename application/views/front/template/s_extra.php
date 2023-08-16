@@ -8,7 +8,6 @@
                 <?php
                 $populer = $this->post->post_populer();
                 foreach ($populer as $p) {
-                    $nama = json_npm($p['id_mahasiswa_pt'])['nm_pd'];
                 ?>
                     <article class="col-block popular__post">
                         <a href="<?= base_url("HM/post/" . $p['slug']) ?>" class="popular__thumb">
@@ -18,7 +17,7 @@
                             <h5><?= $p['judul']; ?></h5>
                         </a>
                         <section class="popular__meta">
-                            <span class="popular__author"><span>Oleh</span> <a href="#0"><?= $nama ?></a></span>
+                            <span class="popular__author"><span>Oleh</span> <a href="#0"><?= $p['author'] ?></a></span>
                             <span class="popular__date">
                                 <span>|</span>
                                 <time datetime="<?= $p['created_at'] ?>">

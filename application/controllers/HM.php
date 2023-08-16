@@ -38,10 +38,11 @@ class HM extends CI_Controller
     }
     public function post($slug = null)
     {
-        if ((empty($slug)) || ($slug == null)) {
+        if ($slug == null) {
             notifikasi('Halaman tidak ditemukan !!!', false);
             redirect(base_url('HM/block'));
         }
+
         $query = $this->post->post($slug);
         if ($query['num_rows'] < 1) {
             notifikasi('Postingan tidak ditemukan !!!', false);
