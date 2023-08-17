@@ -75,4 +75,12 @@ class Pengurus_model extends CI_Model
         $this->db->where('a.id_mahasiswa_pt', $npm)->order_by('periode1', 'DESC');
         return $this->db->get();
     }
+
+    // GET NAMA KAHIM
+    public function get_kahim($id_mj)
+    {
+        return $this->db->select("nama_mhs")->from($this->table . ' p')
+            ->join('t_mahasiswa m', 'p.id_mahasiswa_pt=m.id_mahasiswa_pt', 'LEFT')
+            ->where('id_mj', $id_mj)->where('id_jabatan', 2)->get()->row()->nama_mhs;
+    }
 }

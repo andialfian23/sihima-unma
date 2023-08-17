@@ -8,15 +8,19 @@ class Auth_model extends CI_Model
         $this->db->select("mhs.id_mhs, mhs.id_mahasiswa_pt as id_mahasiswa_pt, nama_mhs, mhs.kode_prodi, is_admin, 
                     CASE WHEN j.jabatan !='' THEN j.jabatan ELSE 'Anggota' END AS jabatan, 
                     CASE WHEN j.level !='' THEN j.level ELSE 8 END as role_id,
+                    
                     CASE WHEN p.id_mj != '' THEN p.id_mj 
                         ELSE (SELECT id_mj FROM t_masa_jabatan 
                             WHERE status_mj=1 AND id_hima=h.id_hima) END AS id_mj, 
+
                     CASE WHEN CONCAT(periode1,'/',periode2) != '/' THEN CONCAT(periode1,'/',periode2)
                         ELSE (SELECT CONCAT(periode1,'/',periode2) FROM t_masa_jabatan 
                             WHERE status_mj=1 AND id_hima=h.id_hima) END AS periode,
+
                     CASE WHEN mj.status_mj !='' THEN mj.status_mj
-                        ELSE (SELECT id_mj FROM t_masa_jabatan 
-                            WHERE status_mj=1 AND id_hima=h.id_hima) END AS status_mj, 
+                        ELSE (SELECT status_mj FROM t_masa_jabatan  
+                            WHERE id_mj=mj.id_mj) END AS status_mj, 
+
                     h.id_hima, singkatan, nama_hima")
             ->from("t_mahasiswa AS mhs")
             ->join("t_pengurus AS p", "mhs.id_mahasiswa_pt = p.id_mahasiswa_pt", "LEFT")

@@ -222,31 +222,29 @@ class Auth extends CI_Controller
             if ($cek_mahasiswa->num_rows() > 0) {
                 foreach ($cek_mahasiswa->result() as $mhs) {
                     $id_mahasiswa_pt = $mhs->id_mahasiswa_pt;
-                    $is_admin  = $mhs->is_admin;
+                    $is_admin   = $mhs->is_admin;
                     $hima_id    = $mhs->id_hima;
                     $singkatan  = $mhs->singkatan;
                     $nama_hima  = $mhs->nama_hima;
 
+                    $nama_user  = $mhs->nama_mhs;
+                    $role_id    = $mhs->role_id;
+                    $jabatan    = $mhs->jabatan;
+
                     if ($mhs->status_mj == 1) {
                         $status_mj = 1;
-                        $nama_user = $mhs->nama_mhs;
-                        $id_mj   = $mhs->id_mj;
-                        $periode = $mhs->periode;
-                        $role_id = $mhs->role_id;
-                        $jabatan = $mhs->jabatan;
+                        $id_mj      = $mhs->id_mj;
+                        $periode    = $mhs->periode;
                         break;
                     } else {
                         $status_mj = 0;
-                        $nama_user = $mhs->nama_mhs;
-                        $id_mj   = $mhs->id_mj;
-                        $periode = $mhs->periode;
-                        $role_id = $mhs->role_id;
-                        $jabatan = $mhs->jabatan;
+                        $periode    = $mhs->periode;
+                        $id_mj      = $mhs->id_mj;
                     }
                 }
 
-                //CEK DEMISIONER ATAU BUKAN
-                if ($status_mj == 0) {
+                // //CEK DEMISIONER ATAU BUKAN
+                if (($status_mj == 0) && ($jabatan != 'Anggota')) {
                     $role_id = 7;
                     $jabatan = 'Demisioner';
                 }

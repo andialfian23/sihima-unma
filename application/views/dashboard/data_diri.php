@@ -145,7 +145,7 @@ if ($histori_jabatan->num_rows() > 0) {
                                             <a class="btn btn-sm btn-info mb-1" href="<?= base_url('Anggota/e_pengurus/' . $mhs['id_mahasiswa_pt']) ?>">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-sm btn-danger mb-1" href="<?= base_url(" Anggota/del_pengurus/" . $mhs['id_mahasiswa_pt']); ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">
+                                            <a class="btn btn-sm btn-danger mb-1" href="<?= base_url("Anggota/del_pengurus/" . $mhs['id_mahasiswa_pt']); ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                 <?php

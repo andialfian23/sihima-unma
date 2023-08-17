@@ -39,7 +39,7 @@ if ($cash > 0) {
             <td></td>
         </tr>
         <?php $no = 2;
-        foreach ($pemasukan['result']->result_array() as $t) { ?>
+        foreach ($pemasukan['result'] as $t) { ?>
             <tr>
                 <!-- <td><?= $no ?></td> -->
                 <td>

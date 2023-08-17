@@ -36,7 +36,7 @@ class Pengurus extends CI_Controller
             $periode = $_SESSION['per_jabatan'];
         }
 
-        $kahim     = $this->MJ_model->kahim($id_mj);
+        $kahim     = $this->pengurus_model->get_kahim($id_mj);
         $masa_jabatans = $this->MJ_model->get_masa_jabatan($_SESSION['hima_id']);
         $penguruss = $this->pengurus_model->get_anggota_pengurus($id_hima, $id_mj);
         $this->load->view('dashboard/template/main', [
@@ -51,13 +51,11 @@ class Pengurus extends CI_Controller
             'file'       => 'pengurus/index',
         ]);
     }
+
     public function histori_pm()    //Histori Pemasukkan
     {
         $pemasukans = $this->keuangan->get_pemasukan($_SESSION['id_mj']);
         $pembayaran = $this->pembayaran->get_kas_himpunan($_SESSION['id_mj']);
-
-        // echo $this->db->last_query();
-        // die;
 
         $this->load->view('dashboard/template/main', [
             'title'      => 'Histori Pemasukan ' . $_SESSION['per_jabatan'],
@@ -67,6 +65,11 @@ class Pengurus extends CI_Controller
             'pemasukan'  => $pemasukans,
             'file'       => 'pemasukan/index_pm',
         ]);
+    }
+    public function session()
+    {
+        $this->load->model('auth_model');
+        echo json_encode($this->auth_model->get_mahasiswa($_SESSION['id_mahasiswa_pt'])->result());
     }
     public function histori_pk()    //Histori Pengeluaran
     {
