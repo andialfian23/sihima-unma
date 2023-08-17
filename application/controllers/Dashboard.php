@@ -138,7 +138,7 @@ class Dashboard extends CI_Controller
 			'file' 		=> 'kegiatan_baru',
 		]);
 	}
-	//TAGIHAN KU => BERDASARKAN NPM
+	//TAGIHAN KU / HISTORI TAGIHAN => BERDASARKAN NPM
 	public function tagihan()
 	{
 		akses_prodi();

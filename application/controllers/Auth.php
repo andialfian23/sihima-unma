@@ -223,8 +223,8 @@ class Auth extends CI_Controller
             $cek_mahasiswa = $this->auth_model->get_mahasiswa($id);
 
             if ($cek_mahasiswa->num_rows() > 0) {
-                $mhs = $cek_mahasiswa->row();
                 foreach ($cek_mahasiswa->result() as $mhs) {
+                    $id_mahasiswa_pt = $mhs->id_mahasiswa_pt;
                     $is_admin  = $mhs->is_admin;
                     $hima_id    = $mhs->id_hima;
                     $singkatan  = $mhs->singkatan;
@@ -258,6 +258,7 @@ class Auth extends CI_Controller
                 $role_id = ($is_admin == '1') ? '1' : $role_id;
                 $data_session = [
                     'level_name' => 'MAHASISWA',
+                    'id_mahasiswa_pt' => $id_mahasiswa_pt,
                     'nama_user' => $nama_user,
                     'id_mj' => $id_mj,
                     'per_jabatan' => $periode,

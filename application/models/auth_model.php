@@ -5,7 +5,7 @@ class Auth_model extends CI_Model
 {
     public function get_mahasiswa($id)
     {
-        $this->db->select("mhs.id_mhs, mhs.id_mahasiswa_pt as npm, nama_mhs, mhs.kode_prodi, is_admin, 
+        $this->db->select("mhs.id_mhs, mhs.id_mahasiswa_pt as id_mahasiswa_pt, nama_mhs, mhs.kode_prodi, is_admin, 
                     CASE WHEN j.jabatan !='' THEN j.jabatan ELSE 'Anggota' END AS jabatan, 
                     CASE WHEN j.level !='' THEN j.level ELSE 8 END as role_id,
                     CASE WHEN p.id_mj != '' THEN p.id_mj 

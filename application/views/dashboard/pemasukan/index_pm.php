@@ -28,12 +28,22 @@ if ($cash > 0) {
         </tr>
     </thead>
     <tbody>
-        <?php $no = 1;
+        <tr>
+            <!-- <td>1</td> -->
+            <td>
+                --
+            </td>
+            <td>KAS <?= $kas['singkatan'] . ' ' . $kas['periode'] ?></td>
+            <td>Anggota</td>
+            <td class="text-right"><?= number_format($kas['jml_kas']) ?></td>
+            <td></td>
+        </tr>
+        <?php $no = 2;
         foreach ($pemasukan['result']->result_array() as $t) { ?>
             <tr>
                 <!-- <td><?= $no ?></td> -->
                 <td>
-                    <?= ($t['kas_hima'] == 1) ? '1 PERIODE' : $t['tgl_pm']; ?>
+                    <?= $t['tgl_pm']; ?>
                 </td>
                 <td><?= $t['nama_pemasukan'] ?></td>
                 <td><?= $t['sumber'] ?></td>
@@ -42,14 +52,14 @@ if ($cash > 0) {
                 if ($cash > 0) {
                 ?>
                     <td>
-                        <?php if ($t['kas_hima'] == 0) : ?>
-                            <a href="<?= base_url("Keuangan/e_pm/" . $t['no_pm']) ?>" class="btn btn-info btn-sm mb-1">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <a href="<?= base_url("Keuangan/del_pm/" . $t['no_pm']) ?>" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Apakah Anda Yakin ingin menghapus data pemasukan <?= $t['nama_pemasukan'] ?> ini ?')">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        <?php endif; ?>
+
+                        <a href="<?= base_url("Keuangan/e_pm/" . $t['no_pm']) ?>" class="btn btn-info btn-sm mb-1">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="<?= base_url("Keuangan/del_pm/" . $t['no_pm']) ?>" class="btn btn-danger btn-sm mb-1" onclick="return confirm('Apakah Anda Yakin ingin menghapus data pemasukan <?= $t['nama_pemasukan'] ?> ini ?')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
                     </td>
                 <?php
                 } ?>

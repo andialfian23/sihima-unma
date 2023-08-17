@@ -29,16 +29,16 @@ if ($tagihan_anggota->num_rows() > 0) {
                     <td>Rp <?= number_format($row['jml_tagihan']) ?></td>
                     <td>
                         <?php
-                        if ($row['jml_tagihan'] == $row['sisa_tagihan']) {
+                        if ($row['telah_dibayar'] == NULL) {
                         ?>
-                            <a href="<?= base_url('Pembayaran/' . $row['no_ta']) ?>" class="text-danger">
+                            <a href="<?= base_url('Pembayaran/bayar/' . $row['no_ta']) ?>" class="text-danger">
                                 <b>Belum Bayar</b>
                             </a>
                         <?php
-                        } elseif ($row['sisa_tagihan'] == 0) {
+                        } elseif ($row['jml_tagihan'] == $row['telah_dibayar']) {
                             echo 'Lunas';
                         } else {
-                            echo '<a href="' . base_url('Pembayaran/' . $row['no_ta']) . '">' . number_format($row['jml_tagihan']) . '</a>';
+                            echo '<a href="' . base_url('Pembayaran/bayar/' . $row['no_ta']) . '">' . number_format($row['telah_dibayar']) . '</a>';
                         }
                         ?>
                     </td>

@@ -100,7 +100,7 @@
         if (confirm('Apakah anda yakin ingin menghapus data tersebut ???') == true) {
             toastr.success('Data pembayaran akan segera di Hapus');
             setTimeout(function() {
-                window.location.assign('<?= base_url("Pembayaran/hapus/") ?>' + no_pb);
+                window.location.assign('<?= base_url("Pembayaran/delete/") ?>' + no_pb);
             }, 2000);
         }
     }

@@ -18,14 +18,14 @@
                 <td><?= $row['expired_at'] ?></td>
                 <td>
                     <?php
-                    $jml = $row['jml_tagihan'];
-                    $u = $row['dibayar'];
-                    if ($u == 0) {
+                    $jml_tg = $row['jml_tagihan'];
+                    $jml_dibayar = $row['jml_dibayar'];
+                    if ($jml_dibayar == 0) {
                         echo "<b class='text-danger'>Belum Bayar</b>";
-                    } elseif ($u == $jml) {
+                    } elseif ($jml_dibayar == $jml_tg) {
                         echo "<b class='text-success'>Lunas</b>";
                     } else {
-                        echo number_format($u);
+                        echo number_format($jml_dibayar);
                     }
                     ?>
                 </td>

@@ -38,15 +38,16 @@
             <div class="form-group row">
                 <label class="col-md-12 col-form-label">Hasil Pencarian : <b>NPM <?= $result['id_mahasiswa_pt'] ?></b></label>
             </div>
-            <form action="<?= base_url('Tagihan_anggota/p_i_tmhs') ?>" method="POST" accept-charset="utf-8">
+            <form action="<?= base_url('Tagihan_anggota/insert') ?>" method="POST" accept-charset="utf-8">
 
                 <div class="form-group row">
                     <label for="nama" class="col-md-3 col-form-label">Nama Lengkap</label>
                     <div class="col-md-9">
                         <div class="input-group">
-                            <input name="nama" id="nama" class="form-control" value="<?= $result['nm_pd'] ?>" disabled />
-                            <input name="npm3" id="npm3" class="hidden" value="<?= $result['id_mahasiswa_pt'] ?>" />
-                            <input name="no_tg" id="npm" class="hidden" value="<?= $tagihan['no_tg'] ?>" />
+                            <input type="text" name="nama" id="nama" class="form-control" value="<?= $result['nm_pd'] ?>" disabled />
+                            <input type="hidden" name="id_mhs" id="id_mhs" value="<?= $result['id_mahasiswa_pt'] ?>" />
+                            <input type="hidden" name="no_tg" id="npm" value="<?= $tagihan['no_tg'] ?>" />
+                            <input type="hidden" name="jenis" id="jenis" value="Lainnya" />
                         </div>
                     </div>
                 </div>

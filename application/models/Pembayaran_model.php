@@ -3,18 +3,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class pembayaran_model extends CI_Model
 {
-    var $table = 't_pembayaran';
+    var $table = 't_pembayaran pb';
     var $column_search     = array('nama_mhs', 'nama_tagihan', 'tgl_bayar', 'nominal');
 
     public function get_mahasiswa($id_mj, $no_pb = null)
     {
-        $this->db->select('a.*, nama_tagihan, b.id_mj')->from($this->table . ' a')
-            ->join('t_tagihan b', 'a.no_tg = b.no_tg')
+        $this->db->select('pb.*, tg.nama_tagihan, tg.id_mj')->from($this->table)
+            ->join('t_tagihan_anggota ta', 'pb.no_ta = ta.no_ta')
+            ->join('t_tagiha tg', 'ta.no_tg = tg.no_tg')
 
             ->where('id_mj', $id_mj);
 
         if ($no_pb == null) {
-            $this->db->where('a.no_pb', $no_pb);
+            $this->db->where('pb.no_pb', $no_pb);
             $pembayaran = $this->db->order_by('tgl_bayar', 'ASC')->get();
         } else {
             $pembayaran = $this->db->order_by('tgl_bayar', 'DESC')->get();
@@ -22,19 +23,52 @@ class pembayaran_model extends CI_Model
         return $pembayaran;
     }
 
+    //PEMBAYARAN
+    function get_pembayaran($id_mj, $no_pb = null)
+    {
+        $this->db->select('nama_tagihan, id_mj, jml_tagihan, nominal_bayar,tgl_bayar')
+            ->from($this->table)
+            ->join('t_tagihan_anggota ta ', 'pb.no_ta = ta.no_ta')
+            ->join('t_tagihan tg ', 'ta.no_tg = tg.no_tg')
+            ->where('id_mj', $id_mj);
+        if ($no_pb == null) {
+            return $this->db->order_by('tgl_bayar', 'DESC')->get()->result_array();
+        } else {
+            return  $this->db->where('no_pb', $no_pb)->get();
+        }
+    }
+
+    //KAS HIMPUNAN / TOTAL PEMBAYARAN
+    public function get_kas_himpunan($id_mj)
+    {
+        $this->db->select("sum(nominal_bayar) as jml_kas, min(tgl_bayar) as tgl, 
+            max(singkatan) as singkatan, max(CONCAT(periode1,'/',periode2)) as periode");
+        $this->db->from($this->table);
+        $this->db->join('t_tagihan_anggota ta', 'pb.no_ta = ta.no_ta');
+        $this->db->join('t_tagihan tg', 'ta.no_tg = tg.no_tg');
+        $this->db->join('t_masa_jabatan mj', 'tg.id_mj = mj.id_mj');
+        $this->db->join('t_hima hm', 'mj.id_hima = hm.id_hima');
+        $this->db->where('tg.id_mj', $id_mj);
+        return $this->db->get()->row_array();
+    }
+
+    //DATATABLES HISTORI PEMBAYARAN
     private function _get_query($column_order, $id_mj = null, $id_mahasiswa_pt = null)
     {
-        $this->db->select('a.*, nama_tagihan, b.id_mj, c.nama_mhs as nama_mhs')
-            ->from($this->table . ' a')
-            ->join('t_tagihan b ', 'a.no_tg = b.no_tg')
-            ->join('t_mahasiswa c', 'a.id_mahasiswa_pt = c.id_mahasiswa_pt', 'LEFT');
+        $this->db->select('pb.*, tg.nama_tagihan, tg.id_mj, m.nama_mhs as nama_mhs')
+            ->from($this->table)
+            ->join('t_tagihan_anggota ta ', 'pb.no_ta = ta.no_ta', 'INNER')
+            ->join('t_tagihan tg', 'ta.no_tg=tg.no_tg', 'INNER')
+            ->join('t_mahasiswa m', 'ta.id_mahasiswa_pt = m.id_mahasiswa_pt', 'LEFT');
 
         if ($id_mj != null) {
-            $this->db->where('id_mj', $id_mj);
+            $this->db->where('tg.id_mj', $id_mj);
         }
+
         if ($id_mahasiswa_pt != null) {
-            $this->db->where('a.id_mahasiswa_pt', $id_mahasiswa_pt);
+            $this->db->where('ta.id_mahasiswa_pt', $id_mahasiswa_pt);
         }
+
         $i = 0;
         foreach ($this->column_search as $item) // looping awal
         {
@@ -54,7 +88,7 @@ class pembayaran_model extends CI_Model
         if (isset($_POST['order'])) {
             $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
-            $this->db->order_by('tgl_bayar', 'DESC');
+            $this->db->order_by('pb.tgl_bayar', 'DESC');
         }
     }
     public function get_datatables($column_order, $id_mj = null, $id_mahasiswa_pt = null)
@@ -80,14 +114,15 @@ class pembayaran_model extends CI_Model
     }
     public function total_entri($id_mj = null, $id_mahasiswa_pt = null)
     {
-        $this->db->select('a.*, nama_tagihan, b.id_mj')
-            ->from($this->table . ' a')
-            ->join('t_tagihan b ', 'a.no_tg = b.no_tg');
+        $this->db->select('pb.*, tg.nama_tagihan, tg.id_mj')
+            ->from($this->table)
+            ->join('t_tagihan_anggota ta ', 'pb.no_ta = ta.no_ta')
+            ->join('t_tagihan tg ', 'ta.no_tg = tg.no_tg');
         if ($id_mj != null) {
-            $this->db->where('id_mj', $id_mj);
+            $this->db->where('tg.id_mj', $id_mj);
         }
         if ($id_mahasiswa_pt != null) {
-            $this->db->where('id_mahasiswa_pt', $id_mahasiswa_pt);
+            $this->db->where('ta.id_mahasiswa_pt', $id_mahasiswa_pt);
         }
         return $this->db->count_all_results();
     }

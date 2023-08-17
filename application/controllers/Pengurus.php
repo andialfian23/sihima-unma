@@ -11,7 +11,7 @@ class Pengurus extends CI_Controller
         $this->load->model('pengurus_model');
         $this->load->model('post_model');
         $this->load->model('keuangan_model', 'keuangan');
-        $this->load->model('tagihan_model', 'tagihan');
+        $this->load->model('pembayaran_model', 'pembayaran');
     }
     public function index()
     {
@@ -54,12 +54,16 @@ class Pengurus extends CI_Controller
     public function histori_pm()    //Histori Pemasukkan
     {
         $pemasukans = $this->keuangan->get_pemasukan($_SESSION['id_mj']);
-        $tagihan = $this->tagihan->get_kas_himpunan($_SESSION['id_mj']);
+        $pembayaran = $this->pembayaran->get_kas_himpunan($_SESSION['id_mj']);
+
+        // echo $this->db->last_query();
+        // die;
+
         $this->load->view('dashboard/template/main', [
             'title'      => 'Histori Pemasukan ' . $_SESSION['per_jabatan'],
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
             'assets_js'  => array("themes/vendors/js/tables/datatable/datatables.min.js"),
-            'kas'        => $tagihan,
+            'kas'        => $pembayaran,
             'pemasukan'  => $pemasukans,
             'file'       => 'pemasukan/index_pm',
         ]);

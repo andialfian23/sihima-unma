@@ -2,6 +2,8 @@
 
 class Tagihan_anggota extends CI_Controller
 {
+    var $table = 't_tagihan_anggota';
+
     public function __construct()
     {
         parent::__construct();
@@ -9,13 +11,15 @@ class Tagihan_anggota extends CI_Controller
         $this->load->model('pengurus_model', 'pengurus');
         $this->load->model('tagihan_model', 'tagihan');
     }
-    //TAGIHAN PENGURUS / ANGGOTA
+
+    // VIEW TAGIHAN PENGURUS / ANGGOTA
     public function detail($no_tg = null)
     {
         if ($no_tg == null) {
             notifikasi('Data Tagihan Tidak Ditemukan!!', false);
             redirect(base_url("Tagihan"));
         }
+
         $id_mj = $_SESSION['id_mj'];
         $tagihan = $this->tagihan->get_tagihan($id_mj, $no_tg);
         if ($tagihan->num_rows() > 0) {
@@ -25,6 +29,8 @@ class Tagihan_anggota extends CI_Controller
             $jml_tagihan_anggota = $this->tagihan->jml_ta($no_tg)['jml_ta'];
             $tagihan_anggota     = $this->tagihan->get_tg_anggota($no_tg);
 
+            // echo $this->db->last_query();
+            // die;
             $this->load->view('dashboard/template/main', [
                 'title'         => $title,
                 'tagihan'       => $tagihan,
@@ -40,6 +46,8 @@ class Tagihan_anggota extends CI_Controller
             redirect(base_url("Tagihan"));
         }
     }
+
+    // VIEW INPUT TAGIHAN ANGGOTA PENGURUS
     public function i_tp($no_tg = null)   //input tagihan pengurus
     {
         if ($no_tg == null) {
@@ -61,33 +69,15 @@ class Tagihan_anggota extends CI_Controller
             redirect(base_url("Tagihan"));
         }
     }
-    function p_i_tp($no_tg = null)    //PROSES INPUT TAGIHAN ANGGOTA
-    {
-        $mhs = post_gan('id_mhs');
-        if ($no_tg == null || $mhs == null) {
-            notifikasi('Gagal menambahkan data tagihan Anggota!!!', false);
-            redirect(base_url("Tagihan/i_tp/" . $no_tg));
-        } else {
-            $ttl = count($mhs);
-            for ($i = 0; $i < $ttl; $i++) {
-                $data_values = array(
-                    'id_mahasiswa_pt' => $mhs[$i],     //NPM
-                    'no_tg'     => $no_tg,
-                    'dibayar'   => '0'
-                );
-                $this->mydb->input_dt($data_values, 't_tagihan_anggota');
-            }
-            notifikasi('Penambahan Tagihan Anggota Berhasil!!!', true);
-            redirect(base_url("Tagihan/tg_pengurus/" . $no_tg));
-        }
-    }
-    //INPUT TAGIHAN ANGGOTA LAINNYA
+
+    // VIEW INPUT TAGIHAN ANGGOTA LAINNYA
     public function i_tmhs($no_tg = null)
     {
         if ($no_tg = null) {
             notifikasi('Data Tagihan Tidak Ditemukan!!', false);
             redirect(base_url("Tagihan"));
         }
+
         $id_mj = $_SESSION['id_mj'];
         $cek = $this->tagihan->get_tagihan($id_mj, $no_tg);
         if ($cek->num_rows() > 0) {
@@ -118,48 +108,62 @@ class Tagihan_anggota extends CI_Controller
             redirect(base_url("Tagihann"));
         }
     }
-    function p_i_tmhs()
+
+    // PROSES INPUT TAGIHAN ANGGOTA
+    public function insert()
     {
-        $npm = post_gan('npm3');
-        $no_tg = post_gan('no_tg');
-        $cek_tg = $this->tagihan->get_tg_anggota($no_tg, $npm)->num_rows();
-        if ($cek_tg > 0) {
-            notifikasi('Tagihan Anggota tidak ada yang dipilih!!!', false);
-            redirect(base_url("Tagihan"));
+        $no_tg = (!empty($_POST['no_tg'])) ? post_gan('no_tg') : null;
+        $jenis = (!empty($_POST['jenis'])) ? post_gan('jenis') : null;
+        $id_mahasiswa_pt = (!empty($_POST['id_mhs'])) ? post_gan('id_mhs') : null;
+
+        if (($no_tg == null) || ($id_mahasiswa_pt == null) || ($jenis == null)) {
+            notifikasi('Gagal menambahkan data tagihan Anggota!!!', false);
+            redirect(base_url("Tagihan/i_tp/" . $no_tg));
         } else {
-            $data_values = array(
-                'id_mahasiswa_pt' => $npm,     //NPM
-                'no_tg' => $no_tg,
-                'dibayar' => '0'
-            );
-            $this->mydb->input_dt($data_values, 't_tagihan_anggota');
-            notifikasi('Tagihan Anggota berhasil dibuat!!!', true);
-            redirect(base_url("Tagihan/tg_pengurus/" . $no_tg));
+            if ($jenis == 'Pengurus') {
+                $ttl = count($id_mahasiswa_pt);
+                for ($i = 0; $i < $ttl; $i++) {
+                    $data_values = array(
+                        'id_mahasiswa_pt' => $id_mahasiswa_pt[$i],     //NPM
+                        'no_tg'     => $no_tg,
+                        'created_at' => date('Y-m-d H:i:s'),
+                    );
+                    $this->mydb->input_dt($data_values, $this->table);
+                }
+            } else {
+                $data_values = array(
+                    'id_mahasiswa_pt' => $id_mahasiswa_pt,     //NPM
+                    'no_tg'     => $no_tg,
+                    'created_at' => date('Y-m-d H:i:s'),
+                );
+                $this->mydb->input_dt($data_values, $this->table);
+            }
+            notifikasi('Penambahan Tagihan Anggota Berhasil!!!', true);
+            redirect(base_url("Tagihan_anggota/detail/" . $no_tg));
         }
     }
 
-    function delete($no_ta = null)
+    // PROSES DELETE TAGIHAN ANGGOTA
+    public function delete($no_ta = null)
     {
         if ($no_ta == null) {
             notifikasi('Data Tagihan Tidak Ditemukan!!', false);
             redirect(base_url("Tagihan"));
         }
+
         $ta = $this->tagihan->get_ta($_SESSION['id_mj'], $no_ta);
         if ($ta->num_rows() > 0) {
             $tagihan = $ta->row_array();
-            if ($tagihan['id_mj'] != $_SESSION['id_mj']) {
-                notifikasi('Tagihan Anggota tidak bisa dihapus !!', false);
-            } else {
-                $where = ['no_ta' => $no_ta];
-                $this->mydb->del($where, 't_tagihan_anggota');
-                $this->mydb->del(['no_tg' => $tagihan['no_tg'], 'id_mahasiswa_pt' => $tagihan['id_mahasiswa_pt']], 't_pembayaran');
 
-                notifikasi('Tagihan Anggota berhasil dihapus!!', true);
-            }
-            redirect(base_url("Tagihan/tg_pengurus/" . $tagihan['no_tg']));
+            $where = ['no_ta' => $no_ta];
+            $this->mydb->del($where, $this->table);
+            $this->mydb->del($where, 't_pembayaran');
+
+            notifikasi('Tagihan Anggota berhasil dihapus!!', true);
+            redirect(base_url("Tagihan_anggota/detail/" . $tagihan['no_tg']));
         } else {
             notifikasi('Data Tagihan Tidak Ditemukan!!', false);
+            redirect(base_url("Tagihan"));
         }
-        redirect(base_url("Tagihan"));
     }
 }
