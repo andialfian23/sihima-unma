@@ -23,7 +23,8 @@ class Auth_model extends CI_Model
             ->join("t_jabatan AS j", " p.id_jabatan = j.id_jabatan", "LEFT")
             ->join("t_masa_jabatan AS mj", "p.id_mj = mj.id_mj", "LEFT")
             ->join("t_hima AS h", "mhs.kode_prodi = h.kode_prodi", "INNER")
-            ->where('mhs.id_mahasiswa_pt', $id);
+            ->where('mhs.id_mahasiswa_pt', $id)
+            ->order_by('mj.id_mj', 'ASC');
 
         return $this->db->get();
     }
@@ -36,5 +37,10 @@ class Auth_model extends CI_Model
             ->join("t_masa_jabatan AS mj", "h.id_hima = mj.id_hima AND status_mj=1", "LEFT")
             ->where('id_dosen', $id);
         return $this->db->get();
+    }
+
+    public function is_admin($id_mahasiswa_pt)
+    {
+        return $this->db->get_where('t_mahasiswa', ['id_mahasiswa_pt' => $id_mahasiswa_pt, 'id_admin' => 1]);
     }
 }

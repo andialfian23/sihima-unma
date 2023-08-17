@@ -3,14 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->library('encryption');
         $this->load->model('auth_model');
         $this->load->model('Hima_model', 'hima_model');
         $this->load->model('MJ_model', 'mj_model');
-        $this->load->model('User_model', 'user_model');
     }
 
     public function index()
@@ -35,7 +34,7 @@ class Auth extends CI_Controller
     }
 
     // ---------- proses login untuk di hosting unmaku ----------
-    function verify_v2($id = NULL)
+    public function verify_v2($id = NULL)
     {
         if ($id == NULL) {
             redirect(base_url('auth'));
@@ -49,8 +48,6 @@ class Auth extends CI_Controller
 
         $plain_text = NULL;
         $plain_text = $this->encryption->decrypt(base64_decode($id));
-        // print_r($plain_text);
-        // die;
 
         if ($plain_text == NULL) {
             $this->result(0, $plain_text);
@@ -147,7 +144,7 @@ class Auth extends CI_Controller
                 }
 
                 //ADMIN 
-                if ($this->user_model->get_admin($_SESSION['id_mahasiswa_pt'])->num_rows() > 0) {
+                if ($this->auth_model->is_admin($_SESSION['id_mahasiswa_pt'])->num_rows() > 0) {
                     $role_id = 1;
                 }
 
@@ -183,7 +180,8 @@ class Auth extends CI_Controller
     }
     // ----------------------------------------------------------
 
-    public function login() // proses login digunakan ketika login di Local
+    //--------------- proses login untuk di Local --------------
+    public function login()
     {
         $id = str_replace("[removed]", "", htmlspecialchars($this->input->post('id', TRUE)));
         $res = [];
@@ -221,7 +219,6 @@ class Auth extends CI_Controller
             }
         } elseif (strlen($id) == 12) {
             $cek_mahasiswa = $this->auth_model->get_mahasiswa($id);
-
             if ($cek_mahasiswa->num_rows() > 0) {
                 foreach ($cek_mahasiswa->result() as $mhs) {
                     $id_mahasiswa_pt = $mhs->id_mahasiswa_pt;
@@ -297,6 +294,7 @@ class Auth extends CI_Controller
 
         echo json_encode($res);
     }
+    // ----------------------------------------------------------
 
     public function logout()
     {
