@@ -14,12 +14,12 @@
         <?php $no = 1;
         foreach ($admins as $row) {
             $id = $row['id'];
-            $nama = $row['nm_pd'];
+            $nama = $row['nama_mhs'];
         ?>
             <tr>
                 <!-- <td><?= $no ?> </td> -->
                 <td><?= $row['id_mahasiswa_pt'] ?> </td>
-                <td><?= $row['nm_pd'] ?> </td>
+                <td><?= $row['nama_mhs'] ?> </td>
                 <td><?= $row['no_hp'] ?> </td>
                 <td>
                     <a href="#" class="btn btn-sm btn-danger mb-1" onclick=" hapusAdmin('<?= $id ?>','<?= $nama ?>'); ">

@@ -45,6 +45,14 @@ class Auth_model extends CI_Model
 
     public function is_admin($id_mahasiswa_pt)
     {
-        return $this->db->get_where('t_mahasiswa', ['id_mahasiswa_pt' => $id_mahasiswa_pt, 'id_admin' => 1]);
+        return $this->db->get_where('t_mahasiswa', ['id_mahasiswa_pt' => $id_mahasiswa_pt, 'is_admin' => 1]);
+    }
+
+    public function get_admin($id_mahasiswa_pt=null){
+        if($id_mahasiswa_pt==null){
+            return $this->db->get('t_mahasiswa',['is_admin'=>1]);
+        }else{
+            return $this->db->get('t_mahasiswa',['is_admin'=>1,'id_mahasiswa_pt'=>$id_mahasiswa_pt]);
+        }
     }
 }

@@ -3,18 +3,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
-    var $table = 't_user';
+    var $table = 't_mahasiswa';
 
     public function __construct()
     {
         parent::__construct();
         is_logged_in();
-        $this->load->model('User_model', 'user');
+        $this->load->model('auth_model', 'user');
     }
 
     public function main()
     {
-        $admins = $this->user->get_admin();
+        $admins = $this->user->get_admin()->result_array();
         $this->load->view('dashboard/template/main', [
             'title'     => 'Dashboard Admin',
             'assets_css' => array("themes/vendors/css/tables/datatable/datatables.min.css"),
@@ -31,7 +31,7 @@ class Admin extends CI_Controller
             if ($api_mhs != null) {
                 $mhs = [];
                 $mhs = json_decode($api_mhs, true)[0];
-                $cek_admin = $this->mydb->get_admin($mhs['id_mahasiswa_pt'])->num_rows();
+                $cek_admin = $this->user->get_admin($mhs['id_mahasiswa_pt'])->num_rows();
                 if ($cek_admin > 0) {
                     $result = [
                         'kode' => '0',
